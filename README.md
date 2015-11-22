@@ -202,11 +202,11 @@ tr.width(10).crop('fit').chain().angle(15).serialize()
 ### Other Cloudinary JavaScript libraries
 
 #### jQuery plugin
-If you are using jQuery, you can take advantage of the Cloudinary jQuery plugin at https://github.com/cloudinary/pkg-cloudinary-jquery.
+If you are using jQuery, you can take advantage of the Cloudinary jQuery plugin at [https://github.com/cloudinary/pkg-cloudinary-jquery](https://github.com/cloudinary/pkg-cloudinary-jquery).
 
 #### jQuery File upload
 The Cloudinary jQuery File Upload library extends the Cloudinary jQuery plugin with support for the [Blueimp jQuery File Upload library](https://blueimp.github.io/jQuery-File-Upload/).
-The library can be found at https://github.com/cloudinary/pkg-cloudinary-jquery-file-upload.
+The library can be found at [https://github.com/cloudinary/pkg-cloudinary-jquery-file-upload](https://github.com/cloudinary/pkg-cloudinary-jquery-file-upload).
 
 ## Additional resources
 
