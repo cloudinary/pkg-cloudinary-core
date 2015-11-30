@@ -1,5 +1,5 @@
 /*
- * Cloudinary's JavaScript library - Version 2.0.1
+ * Cloudinary's JavaScript library - Version 2.0.2
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  */
@@ -1019,6 +1019,7 @@
     } else if (typeof exports === 'object') {
       return module.exports = factory(require('configuration'), require('parameters'), require('util'));
     } else {
+      root.cloudinary || (root.cloudinary = {});
       return root.cloudinary.Transformation = factory(root.cloudinary.Configuration, root.cloudinary.parameters, root.cloudinary.Util);
     }
   })(this, function(Configuration, parameters, Util) {
@@ -2215,7 +2216,7 @@
     return Cloudinary = (function() {
       var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, parentWidth;
 
-      VERSION = "2.0.1";
+      VERSION = "2.0.2";
 
       CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
