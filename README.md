@@ -20,13 +20,14 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 ### bower
 
 1. Install the files using the following command. Use the optional `--save` parameter if you wish to save the dependency in your bower.json file.
+
   ```shell
   bower install cloudinary-core
   ```
 1. Include the javascript file in your HTML. For Example:
 
   ```html
-  <script src="../bower_components/cloudinary-core/cloudinary-core.js"></script>
+  <script src="bower_components/cloudinary-core/cloudinary-core.js"></script>
   ```
 
 ### NPM
@@ -36,7 +37,7 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 1. Include the javascript file in your HTML. For Example:
 
   ```html
-  <script src="../node_modules/cloudinary-core/cloudinary-core.js"></script>
+  <script src="node_modules/cloudinary-core/cloudinary-core.js"></script>
   ```
 
 For the server side NPM library, please refer to https://github.com/cloudinary/cloudinary_npm.
