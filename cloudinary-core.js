@@ -1,5 +1,5 @@
 /*
- * Cloudinary's JavaScript library - Version 2.0.3
+ * Cloudinary's JavaScript library - Version 2.0.4
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  */
@@ -2216,7 +2216,7 @@
     return Cloudinary = (function() {
       var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, parentWidth;
 
-      VERSION = "2.0.3";
+      VERSION = "2.0.4";
 
       CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -2279,7 +2279,7 @@
         this.devicePixelRatioCache = {};
         this.responsiveConfig = {};
         this.responsiveResizeInitialized = false;
-        configuration = new cloudinary.Configuration(options);
+        configuration = new Configuration(options);
         this.config = function(newConfig, newValue) {
           return configuration.config(newConfig, newValue);
         };
@@ -2795,7 +2795,7 @@
       };
 
       cloudinaryUrlPrefix = function(publicId, options) {
-        var cdnPart, host, path, protocol, ref, ref1, subdomain;
+        var cdnPart, host, path, protocol, ref, subdomain;
         if (((ref = options.cloud_name) != null ? ref.indexOf("/") : void 0) === 0) {
           return '/res' + options.cloud_name;
         }
@@ -2806,8 +2806,6 @@
         path = "/" + options.cloud_name;
         if (options.protocol) {
           protocol = options.protocol + '//';
-        } else if ((typeof window !== "undefined" && window !== null ? (ref1 = window.location) != null ? ref1.protocol : void 0 : void 0) === 'file:') {
-          protocol = 'file://';
         }
         if (options.private_cdn) {
           cdnPart = options.cloud_name + "-";
@@ -3055,7 +3053,7 @@
 (function() {
   (function(root, factory) {
     if ((typeof define === 'function') && define.amd) {
-      return define('cloudinary-core-full',['utf8_encode', 'crc32', 'util', 'transformation', 'configuration', 'tags/htmltag', 'tags/imagetag', 'tags/videotag', 'cloudinary'], factory);
+      return define(['utf8_encode', 'crc32', 'util', 'transformation', 'configuration', 'tags/htmltag', 'tags/imagetag', 'tags/videotag', 'cloudinary'], factory);
     } else if (typeof exports === 'object') {
       return module.exports = factory(require('utf8_encode'), require('crc32'), require('util'), require('transformation'), require('configuration'), require('tags/htmltag'), require('tags/imagetag'), require('tags/videotag'), require('cloudinary'));
     } else {
