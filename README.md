@@ -20,6 +20,7 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 ### bower
 
 1. Install the files using the following command. Use the optional `--save` parameter if you wish to save the dependency in your bower.json file.
+
    ```shell
    bower install cloudinary-core
    ```
@@ -34,11 +35,13 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 The following instructions describe the installation of the **client-side libraries**. For the server side NodeJS library, see https://github.com/cloudinary/cloudinary_npm
 
 1. Install the files using:
-   ```
+
+   ```shell
    npm install lodash
    npm install cloudinary-core
    ```
 1. Include the javascript file in your HTML. For Example:
+
    ```html
    <script src="node_modules/lodash/lodash.js"                   type="text/javascript"></script>
    <script src="node_modules/cloudinary-core/cloudinary-core.js" type="text/javascript"></script>
