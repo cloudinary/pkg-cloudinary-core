@@ -1,6 +1,6 @@
-This is a distribution repository for `bower` and `npm`. The sources for this repository are maintained at the [cloudinary_js repository](https://github.com/cloudinary/cloudinary_js). Please submit issues and pull requests to that repository.
+:information_source: This is a distribution repository for `bower` and `npm`. The sources for this repository are maintained at the [cloudinary_js repository](https://github.com/cloudinary/cloudinary_js). Please submit issues and pull requests to that repository.
 
-# Cloudinary - bower and npm repository
+# Cloudinary Client Side JavaScript Library<br>`bower` and `npm` repository
 
 Cloudinary is a cloud service that offers a solution to a web application's entire image management pipeline.
 
@@ -20,25 +20,29 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 ### bower
 
 1. Install the files using the following command. Use the optional `--save` parameter if you wish to save the dependency in your bower.json file.
-
-  ```shell
-  bower install cloudinary-core
-  ```
+   ```shell
+   bower install cloudinary-core
+   ```
 1. Include the javascript file in your HTML. For Example:
 
-  ```html
-  <script src="bower_components/cloudinary-core/cloudinary-core.js"></script>
-  ```
+   ```html
+   <script src="bower_componenets/lodash/lodash.js"                  type="text/javascript"></script>
+   <script src="bower_components/cloudinary-core/cloudinary-core.js" type="text/javascript"></script>
+   ```
 
 ### NPM
+The following instructions describe the installation of the **client-side libraries**. For the server side NodeJS library, see https://github.com/cloudinary/cloudinary_npm
 
 1. Install the files using:
-  `npm  install cloudinary_core`.
+   ```
+   npm install lodash
+   npm install cloudinary-core
+   ```
 1. Include the javascript file in your HTML. For Example:
-
-  ```html
-  <script src="node_modules/cloudinary-core/cloudinary-core.js"></script>
-  ```
+   ```html
+   <script src="node_modules/lodash/lodash.js"                   type="text/javascript"></script>
+   <script src="node_modules/cloudinary-core/cloudinary-core.js" type="text/javascript"></script>
+   ```
 
 For the server side NPM library, please refer to https://github.com/cloudinary/cloudinary_npm.
 
@@ -64,9 +68,11 @@ http://cloudinary.com/blog/direct_image_uploads_from_the_browser_to_the_cloud_wi
 The Cloudinary Documentation can be found at:
 http://cloudinary.com/documentation
 
-### Core JavaScript library
+### Cloudinary JavaScript library
 
 The Core Cloudinary JavaScript library provides several classes, defined under the "`cloudinary`" domain. The reference documentation is located at https://cloudinary.github.io/pkg-cloudinary-core
+
+The Cloudinary JavaScript library provides several classes, defined under the "`cloudinary`" domain.
 
 #### Configuration
 
