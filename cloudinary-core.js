@@ -1,123 +1,40 @@
-/*
- * Cloudinary's JavaScript library - Version 2.0.5
+
+/**
+ * Cloudinary's JavaScript library - Version 2.0.6
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
+ *
  */
-(function() {
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('utf8_encode',factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory();
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.utf8_encode = factory();
-    }
-  })(this, function() {
-    return function(argString) {
-      var c1, enc, end, n, start, string, stringl, utftext;
-      if (argString === null || typeof argString === 'undefined') {
-        return '';
-      }
-      string = argString + '';
-      utftext = '';
-      start = void 0;
-      end = void 0;
-      stringl = 0;
-      start = end = 0;
-      stringl = string.length;
-      n = 0;
-      while (n < stringl) {
-        c1 = string.charCodeAt(n);
-        enc = null;
-        if (c1 < 128) {
-          end++;
-        } else if (c1 > 127 && c1 < 2048) {
-          enc = String.fromCharCode(c1 >> 6 | 192, c1 & 63 | 128);
-        } else {
-          enc = String.fromCharCode(c1 >> 12 | 224, c1 >> 6 & 63 | 128, c1 & 63 | 128);
-        }
-        if (enc !== null) {
-          if (end > start) {
-            utftext += string.slice(start, end);
-          }
-          utftext += enc;
-          start = end = n + 1;
-        }
-        n++;
-      }
-      if (end > start) {
-        utftext += string.slice(start, stringl);
-      }
-      return utftext;
-    };
-  });
-
-}).call(this);
 
 (function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
   (function(root, factory) {
     if ((typeof define === 'function') && define.amd) {
-      return define('crc32',['utf8_encode'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('utf8_encode'));
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.crc32 = factory(root.cloudinary.utf8_encode);
-    }
-  })(this, function(utf8_encode) {
-    return function(str) {
-      var crc, i, iTop, table, x, y;
-      str = utf8_encode(str);
-      table = '00000000 77073096 EE0E612C 990951BA 076DC419 706AF48F E963A535 9E6495A3 0EDB8832 79DCB8A4 E0D5E91E 97D2D988 09B64C2B 7EB17CBD E7B82D07 90BF1D91 1DB71064 6AB020F2 F3B97148 84BE41DE 1ADAD47D 6DDDE4EB F4D4B551 83D385C7 136C9856 646BA8C0 FD62F97A 8A65C9EC 14015C4F 63066CD9 FA0F3D63 8D080DF5 3B6E20C8 4C69105E D56041E4 A2677172 3C03E4D1 4B04D447 D20D85FD A50AB56B 35B5A8FA 42B2986C DBBBC9D6 ACBCF940 32D86CE3 45DF5C75 DCD60DCF ABD13D59 26D930AC 51DE003A C8D75180 BFD06116 21B4F4B5 56B3C423 CFBA9599 B8BDA50F 2802B89E 5F058808 C60CD9B2 B10BE924 2F6F7C87 58684C11 C1611DAB B6662D3D 76DC4190 01DB7106 98D220BC EFD5102A 71B18589 06B6B51F 9FBFE4A5 E8B8D433 7807C9A2 0F00F934 9609A88E E10E9818 7F6A0DBB 086D3D2D 91646C97 E6635C01 6B6B51F4 1C6C6162 856530D8 F262004E 6C0695ED 1B01A57B 8208F4C1 F50FC457 65B0D9C6 12B7E950 8BBEB8EA FCB9887C 62DD1DDF 15DA2D49 8CD37CF3 FBD44C65 4DB26158 3AB551CE A3BC0074 D4BB30E2 4ADFA541 3DD895D7 A4D1C46D D3D6F4FB 4369E96A 346ED9FC AD678846 DA60B8D0 44042D73 33031DE5 AA0A4C5F DD0D7CC9 5005713C 270241AA BE0B1010 C90C2086 5768B525 206F85B3 B966D409 CE61E49F 5EDEF90E 29D9C998 B0D09822 C7D7A8B4 59B33D17 2EB40D81 B7BD5C3B C0BA6CAD EDB88320 9ABFB3B6 03B6E20C 74B1D29A EAD54739 9DD277AF 04DB2615 73DC1683 E3630B12 94643B84 0D6D6A3E 7A6A5AA8 E40ECF0B 9309FF9D 0A00AE27 7D079EB1 F00F9344 8708A3D2 1E01F268 6906C2FE F762575D 806567CB 196C3671 6E6B06E7 FED41B76 89D32BE0 10DA7A5A 67DD4ACC F9B9DF6F 8EBEEFF9 17B7BE43 60B08ED5 D6D6A3E8 A1D1937E 38D8C2C4 4FDFF252 D1BB67F1 A6BC5767 3FB506DD 48B2364B D80D2BDA AF0A1B4C 36034AF6 41047A60 DF60EFC3 A867DF55 316E8EEF 4669BE79 CB61B38C BC66831A 256FD2A0 5268E236 CC0C7795 BB0B4703 220216B9 5505262F C5BA3BBE B2BD0B28 2BB45A92 5CB36A04 C2D7FFA7 B5D0CF31 2CD99E8B 5BDEAE1D 9B64C2B0 EC63F226 756AA39C 026D930A 9C0906A9 EB0E363F 72076785 05005713 95BF4A82 E2B87A14 7BB12BAE 0CB61B38 92D28E9B E5D5BE0D 7CDCEFB7 0BDBDF21 86D3D2D4 F1D4E242 68DDB3F8 1FDA836E 81BE16CD F6B9265B 6FB077E1 18B74777 88085AE6 FF0F6A70 66063BCA 11010B5C 8F659EFF F862AE69 616BFFD3 166CCF45 A00AE278 D70DD2EE 4E048354 3903B3C2 A7672661 D06016F7 4969474D 3E6E77DB AED16A4A D9D65ADC 40DF0B66 37D83BF0 A9BCAE53 DEBB9EC5 47B2CF7F 30B5FFE9 BDBDF21C CABAC28A 53B39330 24B4A3A6 BAD03605 CDD70693 54DE5729 23D967BF B3667A2E C4614AB8 5D681B02 2A6F2B94 B40BBE37 C30C8EA1 5A05DF1B 2D02EF8D';
-      crc = 0;
-      x = 0;
-      y = 0;
-      crc = crc ^ -1;
-      i = 0;
-      iTop = str.length;
-      while (i < iTop) {
-        y = (crc ^ str.charCodeAt(i)) & 0xFF;
-        x = '0x' + table.substr(y * 9, 8);
-        crc = crc >>> 8 ^ x;
-        i++;
-      }
-      crc = crc ^ -1;
-      if (crc < 0) {
-        crc += 4294967296;
-      }
-      return crc;
-    };
-  });
-
-}).call(this);
-
-(function() {
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('util', ['lodash'], factory);
+      return define(['lodash'], factory);
     } else if (typeof exports === 'object') {
       return module.exports = factory(require('lodash'));
     } else {
       root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.Util = factory(_);
+      return root.cloudinary = factory(_);
     }
   })(this, function(_) {
 
     /**
-      * Includes utility methods and lodash / jQuery shims
+     * Includes utility methods and lodash / jQuery shims
      */
 
     /**
-      * Get data from the DOM element.
-      *
-      * This method will use jQuery's `data()` method if it is available, otherwise it will get the `data-` attribute
-      * @param {Element} element - the element to get the data from
-      * @param {string} name - the name of the data item
-      * @returns the value associated with the `name`
-      *
+     * Get data from the DOM element.
+     *
+     * This method will use jQuery's `data()` method if it is available, otherwise it will get the `data-` attribute
+     * @param {Element} element - the element to get the data from
+     * @param {string} name - the name of the data item
+     * @returns the value associated with the `name`
+     *
      */
-    var Util, addClass, allStrings, augmentWidthOrHeight, contains, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, pnum, rnumnonpx, setAttribute, setAttributes, setData, width, without;
+    var ArrayParam, Cloudinary, Configuration, HtmlTag, ImageTag, Param, RangeParam, RawParam, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
     getData = function(element, name) {
       if (_.isElement(element)) {
         return element.getAttribute("data-" + name);
@@ -125,13 +42,13 @@
     };
 
     /**
-      * Set data in the DOM element.
-      *
-      * This method will use jQuery's `data()` method if it is available, otherwise it will set the `data-` attribute
-      * @param {Element} element - the element to set the data in
-      * @param {string} name - the name of the data item
-      * @param {*} value - the value to be set
-      *
+     * Set data in the DOM element.
+     *
+     * This method will use jQuery's `data()` method if it is available, otherwise it will set the `data-` attribute
+     * @param {Element} element - the element to set the data in
+     * @param {string} name - the name of the data item
+     * @param {*} value - the value to be set
+     *
      */
     setData = function(element, name, value) {
       if (_.isElement(element)) {
@@ -140,13 +57,13 @@
     };
 
     /**
-      * Get attribute from the DOM element.
-      *
-      * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
-      * @param {Element} element - the element to set the attribute for
-      * @param {string} name - the name of the attribute
-      * @returns {*} the value of the attribute
-      *
+     * Get attribute from the DOM element.
+     *
+     * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
+     * @param {Element} element - the element to set the attribute for
+     * @param {string} name - the name of the attribute
+     * @returns {*} the value of the attribute
+     *
      */
     getAttribute = function(element, name) {
       if (_.isElement(element)) {
@@ -155,13 +72,13 @@
     };
 
     /**
-      * Set attribute in the DOM element.
-      *
-      * This method will use jQuery's `attr()` method if it is available, otherwise it will set the attribute directly
-      * @param {Element} element - the element to set the attribute for
-      * @param {string} name - the name of the attribute
-      * @param {*} value - the value to be set
-      *
+     * Set attribute in the DOM element.
+     *
+     * This method will use jQuery's `attr()` method if it is available, otherwise it will set the attribute directly
+     * @param {Element} element - the element to set the attribute for
+     * @param {string} name - the name of the attribute
+     * @param {*} value - the value to be set
+     *
      */
     setAttribute = function(element, name, value) {
       if (_.isElement(element)) {
@@ -330,13 +247,13 @@
       addClass: addClass,
 
       /**
-        * Get attribute from the DOM element.
-        *
-        * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
-        * @param {Element} element - the element to set the attribute for
-        * @param {string} name - the name of the attribute
-        * @returns {*} the value of the attribute
-        *
+       * Get attribute from the DOM element.
+       *
+       * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
+       * @param {Element} element - the element to set the attribute for
+       * @param {string} name - the name of the attribute
+       * @returns {*} the value of the attribute
+       *
        */
       getAttribute: getAttribute,
       setAttribute: setAttribute,
@@ -362,8 +279,8 @@
       assign: _.assign,
 
       /**
-      * Recursively assign source properties to destination
-      * @param {Object} destination - the object to assign to
+       * Recursively assign source properties to destination
+       * @param {Object} destination - the object to assign to
        */
       merge: _.merge,
 
@@ -401,14 +318,14 @@
        * @param {*} item - the item to search for
        * @return {boolean} true if the item is included in the array
        */
-      contains: _.contains,
+      contains: _.includes,
 
       /**
-      * Assign values from sources if they are not defined in the destination.
-      * Once a value is set it does not change
-      * @param {Object} destination - the object to assign defaults to
-      * @param {...Object} source - the source object(s) to assign defaults from
-      * @return {Object} destination after it was modified
+       * Assign values from sources if they are not defined in the destination.
+       * Once a value is set it does not change
+       * @param {Object} destination - the object to assign defaults to
+       * @param {...Object} source - the source object(s) to assign defaults from
+       * @return {Object} destination after it was modified
        */
       defaults: _.defaults,
 
@@ -421,9 +338,9 @@
       difference: _.difference,
 
       /**
-      * Returns true if argument is a function.
-      * @param {*} value - the value to check
-      * @return {boolean} true if the value is a function
+       * Returns true if argument is a function.
+       * @param {*} value - the value to check
+       * @return {boolean} true if the value is a function
        */
       isFunction: _.isFunction,
 
@@ -457,227 +374,80 @@
        */
       without: without
     };
-    return Util;
-  });
-
-}).call(this);
-
-(function() {
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('configuration',['util'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('util'));
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.Configuration = factory(root.cloudinary.Util);
-    }
-  })(this, function(Util) {
 
     /**
-     * Cloudinary configuration class
+     * UTF8 encoder
+     *
      */
-    var Configuration;
-    Configuration = (function() {
-
-      /**
-      * Defaults configuration.
-      * @const {Object} Configuration.DEFAULT_CONFIGURATION_PARAMS
-       */
-      var DEFAULT_CONFIGURATION_PARAMS, ref;
-
-      DEFAULT_CONFIGURATION_PARAMS = {
-        secure: (typeof window !== "undefined" && window !== null ? (ref = window.location) != null ? ref.protocol : void 0 : void 0) === 'https:'
-      };
-
-      Configuration.CONFIG_PARAMS = ["api_key", "api_secret", "cdn_subdomain", "cloud_name", "cname", "private_cdn", "protocol", "resource_type", "responsive_width", "secure", "secure_cdn_subdomain", "secure_distribution", "shorten", "type", "url_suffix", "use_root_path", "version"];
-
-
-      /**
-       * Cloudinary configuration class
-       * @constructor Configuration
-       * @param {Object} options - configuration parameters
-       */
-
-      function Configuration(options) {
-        if (options == null) {
-          options = {};
-        }
-        this.configuration = Util.cloneDeep(options);
-        Util.defaults(this.configuration, DEFAULT_CONFIGURATION_PARAMS);
+    utf8_encode = function(argString) {
+      var c1, enc, end, n, start, string, stringl, utftext;
+      if (argString === null || typeof argString === 'undefined') {
+        return '';
       }
-
-
-      /**
-       * Initialize the configuration.
-       * The function first tries to retrieve the configuration form the environment and then from the document.
-       * @function Configuration#init
-       * @return {Configuration} returns this for chaining
-       * @see fromDocument
-       * @see fromEnvironment
-       */
-
-      Configuration.prototype.init = function() {
-        this.fromEnvironment();
-        this.fromDocument();
-        return this;
-      };
-
-
-      /**
-       * Set a new configuration item
-       * @function Configuration#set
-       * @param {string} name - the name of the item to set
-       * @param {*} value - the value to be set
-       * @return {Configuration}
-       *
-       */
-
-      Configuration.prototype.set = function(name, value) {
-        this.configuration[name] = value;
-        return this;
-      };
-
-
-      /**
-       * Get the value of a configuration item
-       * @function Configuration#get
-       * @param {string} name - the name of the item to set
-       * @return {*} the configuration item
-       */
-
-      Configuration.prototype.get = function(name) {
-        return this.configuration[name];
-      };
-
-      Configuration.prototype.merge = function(config) {
-        if (config == null) {
-          config = {};
+      string = argString + '';
+      utftext = '';
+      start = void 0;
+      end = void 0;
+      stringl = 0;
+      start = end = 0;
+      stringl = string.length;
+      n = 0;
+      while (n < stringl) {
+        c1 = string.charCodeAt(n);
+        enc = null;
+        if (c1 < 128) {
+          end++;
+        } else if (c1 > 127 && c1 < 2048) {
+          enc = String.fromCharCode(c1 >> 6 | 192, c1 & 63 | 128);
+        } else {
+          enc = String.fromCharCode(c1 >> 12 | 224, c1 >> 6 & 63 | 128, c1 & 63 | 128);
         }
-        Util.assign(this.configuration, Util.cloneDeep(config));
-        return this;
-      };
-
-
-      /**
-       * Initialize Cloudinary from HTML meta tags.
-       * @function Configuration#fromDocument
-       * @return {Configuration}
-       * @example <meta name="cloudinary_cloud_name" content="mycloud">
-       *
-       */
-
-      Configuration.prototype.fromDocument = function() {
-        var el, i, len, meta_elements;
-        meta_elements = typeof document !== "undefined" && document !== null ? document.querySelectorAll('meta[name^="cloudinary_"]') : void 0;
-        if (meta_elements) {
-          for (i = 0, len = meta_elements.length; i < len; i++) {
-            el = meta_elements[i];
-            this.configuration[el.getAttribute('name').replace('cloudinary_', '')] = el.getAttribute('content');
+        if (enc !== null) {
+          if (end > start) {
+            utftext += string.slice(start, end);
           }
+          utftext += enc;
+          start = end = n + 1;
         }
-        return this;
-      };
+        n++;
+      }
+      if (end > start) {
+        utftext += string.slice(start, stringl);
+      }
+      return utftext;
+    };
 
+    /**
+     * CRC32 calculator
+     * Depends on 'utf8_encode'
+     */
+    crc32 = function(str) {
+      var crc, i, iTop, table, x, y;
+      str = utf8_encode(str);
+      table = '00000000 77073096 EE0E612C 990951BA 076DC419 706AF48F E963A535 9E6495A3 0EDB8832 79DCB8A4 E0D5E91E 97D2D988 09B64C2B 7EB17CBD E7B82D07 90BF1D91 1DB71064 6AB020F2 F3B97148 84BE41DE 1ADAD47D 6DDDE4EB F4D4B551 83D385C7 136C9856 646BA8C0 FD62F97A 8A65C9EC 14015C4F 63066CD9 FA0F3D63 8D080DF5 3B6E20C8 4C69105E D56041E4 A2677172 3C03E4D1 4B04D447 D20D85FD A50AB56B 35B5A8FA 42B2986C DBBBC9D6 ACBCF940 32D86CE3 45DF5C75 DCD60DCF ABD13D59 26D930AC 51DE003A C8D75180 BFD06116 21B4F4B5 56B3C423 CFBA9599 B8BDA50F 2802B89E 5F058808 C60CD9B2 B10BE924 2F6F7C87 58684C11 C1611DAB B6662D3D 76DC4190 01DB7106 98D220BC EFD5102A 71B18589 06B6B51F 9FBFE4A5 E8B8D433 7807C9A2 0F00F934 9609A88E E10E9818 7F6A0DBB 086D3D2D 91646C97 E6635C01 6B6B51F4 1C6C6162 856530D8 F262004E 6C0695ED 1B01A57B 8208F4C1 F50FC457 65B0D9C6 12B7E950 8BBEB8EA FCB9887C 62DD1DDF 15DA2D49 8CD37CF3 FBD44C65 4DB26158 3AB551CE A3BC0074 D4BB30E2 4ADFA541 3DD895D7 A4D1C46D D3D6F4FB 4369E96A 346ED9FC AD678846 DA60B8D0 44042D73 33031DE5 AA0A4C5F DD0D7CC9 5005713C 270241AA BE0B1010 C90C2086 5768B525 206F85B3 B966D409 CE61E49F 5EDEF90E 29D9C998 B0D09822 C7D7A8B4 59B33D17 2EB40D81 B7BD5C3B C0BA6CAD EDB88320 9ABFB3B6 03B6E20C 74B1D29A EAD54739 9DD277AF 04DB2615 73DC1683 E3630B12 94643B84 0D6D6A3E 7A6A5AA8 E40ECF0B 9309FF9D 0A00AE27 7D079EB1 F00F9344 8708A3D2 1E01F268 6906C2FE F762575D 806567CB 196C3671 6E6B06E7 FED41B76 89D32BE0 10DA7A5A 67DD4ACC F9B9DF6F 8EBEEFF9 17B7BE43 60B08ED5 D6D6A3E8 A1D1937E 38D8C2C4 4FDFF252 D1BB67F1 A6BC5767 3FB506DD 48B2364B D80D2BDA AF0A1B4C 36034AF6 41047A60 DF60EFC3 A867DF55 316E8EEF 4669BE79 CB61B38C BC66831A 256FD2A0 5268E236 CC0C7795 BB0B4703 220216B9 5505262F C5BA3BBE B2BD0B28 2BB45A92 5CB36A04 C2D7FFA7 B5D0CF31 2CD99E8B 5BDEAE1D 9B64C2B0 EC63F226 756AA39C 026D930A 9C0906A9 EB0E363F 72076785 05005713 95BF4A82 E2B87A14 7BB12BAE 0CB61B38 92D28E9B E5D5BE0D 7CDCEFB7 0BDBDF21 86D3D2D4 F1D4E242 68DDB3F8 1FDA836E 81BE16CD F6B9265B 6FB077E1 18B74777 88085AE6 FF0F6A70 66063BCA 11010B5C 8F659EFF F862AE69 616BFFD3 166CCF45 A00AE278 D70DD2EE 4E048354 3903B3C2 A7672661 D06016F7 4969474D 3E6E77DB AED16A4A D9D65ADC 40DF0B66 37D83BF0 A9BCAE53 DEBB9EC5 47B2CF7F 30B5FFE9 BDBDF21C CABAC28A 53B39330 24B4A3A6 BAD03605 CDD70693 54DE5729 23D967BF B3667A2E C4614AB8 5D681B02 2A6F2B94 B40BBE37 C30C8EA1 5A05DF1B 2D02EF8D';
+      crc = 0;
+      x = 0;
+      y = 0;
+      crc = crc ^ -1;
+      i = 0;
+      iTop = str.length;
+      while (i < iTop) {
+        y = (crc ^ str.charCodeAt(i)) & 0xFF;
+        x = '0x' + table.substr(y * 9, 8);
+        crc = crc >>> 8 ^ x;
+        i++;
+      }
+      crc = crc ^ -1;
+      if (crc < 0) {
+        crc += 4294967296;
+      }
+      return crc;
+    };
 
-      /**
-       * Initialize Cloudinary from the `CLOUDINARY_URL` environment variable.
-       *
-       * This function will only run under Node.js environment.
-       * @function Configuration#fromEnvironment
-       * @requires Node.js
-       */
-
-      Configuration.prototype.fromEnvironment = function() {
-        var cloudinary_url, k, ref1, ref2, uri, v;
-        cloudinary_url = typeof process !== "undefined" && process !== null ? (ref1 = process.env) != null ? ref1.CLOUDINARY_URL : void 0 : void 0;
-        if (cloudinary_url != null) {
-          uri = require('url').parse(cloudinary_url, true);
-          this.configuration = {
-            cloud_name: uri.host,
-            api_key: uri.auth && uri.auth.split(":")[0],
-            api_secret: uri.auth && uri.auth.split(":")[1],
-            private_cdn: uri.pathname != null,
-            secure_distribution: uri.pathname && uri.pathname.substring(1)
-          };
-          if (uri.query != null) {
-            ref2 = uri.query;
-            for (k in ref2) {
-              v = ref2[k];
-              this.configuration[k] = v;
-            }
-          }
-        }
-        return this;
-      };
-
-
-      /**
-      * Create or modify the Cloudinary client configuration
-      *
-      * Warning: `config()` returns the actual internal configuration object. modifying it will change the configuration.
-      *
-      * This is a backward compatibility method. For new code, use get(), merge() etc.
-      * @function Configuration#config
-      * @param {hash|string|boolean} new_config
-      * @param {string} new_value
-      * @returns {*} configuration, or value
-      *
-      * @see {@link fromEnvironment} for initialization using environment variables
-      * @see {@link fromDocument} for initialization using HTML meta tags
-       */
-
-      Configuration.prototype.config = function(new_config, new_value) {
-        switch (false) {
-          case new_value === void 0:
-            this.set(new_config, new_value);
-            return this.configuration;
-          case !Util.isString(new_config):
-            return this.get(new_config);
-          case !Util.isPlainObject(new_config):
-            this.merge(new_config);
-            return this.configuration;
-          default:
-            return this.configuration;
-        }
-      };
-
-
-      /**
-       * Returns a copy of the configuration parameters
-       * @function Configuration#toOptions
-       * @returns {Object} a key:value collection of the configuration parameters
-       */
-
-      Configuration.prototype.toOptions = function() {
-        return Util.cloneDeep(this.configuration);
-      };
-
-      return Configuration;
-
-    })();
-    return Configuration;
-  });
-
-}).call(this);
-
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('parameters',['util', 'transformation', 'require'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('util'), require('transformation'), require);
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.parameters = factory(root.cloudinary.Util, root.cloudinary.Transformation, function() {
-        return cloudinary.Transformation;
-      });
-    }
-  })(this, function(Util, Transformation, require) {
-    var ArrayParam, Param, RangeParam, RawParam, TransformationParam, parameters;
+    /**
+     * Transformation parameters
+     * Depends on 'util', 'transformation'
+     */
     Param = (function() {
 
       /**
@@ -840,11 +610,11 @@
             return '';
           } else {
             flat = (function() {
-              var i, len, ref, results;
+              var j, len, ref, results;
               ref = this.value();
               results = [];
-              for (i = 0, len = ref.length; i < len; i++) {
-                t = ref[i];
+              for (j = 0, len = ref.length; j < len; j++) {
+                t = ref[j];
                 if (Util.isFunction(t.serialize)) {
                   results.push(t.serialize());
                 } else {
@@ -910,18 +680,17 @@
           }
         } else {
           result = (function() {
-            var i, len, ref, results;
+            var j, len, ref, results;
             ref = this.value();
             results = [];
-            for (i = 0, len = ref.length; i < len; i++) {
-              t = ref[i];
+            for (j = 0, len = ref.length; j < len; j++) {
+              t = ref[j];
               if (t != null) {
                 if (Util.isString(t) && !Util.isEmpty(t)) {
                   results.push(this.short + "_" + t);
                 } else if (Util.isFunction(t.serialize)) {
                   results.push(t.serialize());
                 } else if (Util.isPlainObject(t) && !Util.isEmpty(t)) {
-                  Transformation || (Transformation = require('transformation'));
                   results.push(new Transformation(t).serialize());
                 } else {
                   results.push(void 0);
@@ -1004,31 +773,11 @@
     parameters.RangeParam = RangeParam;
     parameters.RawParam = RawParam;
     parameters.TransformationParam = TransformationParam;
-    return parameters;
-  });
 
-}).call(this);
-
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('transformation',['configuration', 'parameters', 'util'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('configuration'), require('parameters'), require('util'));
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.Transformation = factory(root.cloudinary.Configuration, root.cloudinary.parameters, root.cloudinary.Util);
-    }
-  })(this, function(Configuration, parameters, Util) {
-    var ArrayParam, Param, RangeParam, RawParam, Transformation, TransformationBase, TransformationParam;
-    Param = parameters.Param;
-    ArrayParam = parameters.ArrayParam;
-    RangeParam = parameters.RangeParam;
-    RawParam = parameters.RawParam;
-    TransformationParam = parameters.TransformationParam;
+    /**
+     * Transformation class
+     * Depends on 'configuration', 'parameters','util'
+     */
     TransformationBase = (function() {
       var lastArgCallback;
 
@@ -1284,11 +1033,11 @@
          * @see toHtmlAttributes
          */
         this.PARAM_NAMES = ((function() {
-          var i, len, ref, results;
+          var j, len, ref, results;
           ref = this.methods;
           results = [];
-          for (i = 0, len = ref.length; i < len; i++) {
-            m = ref[i];
+          for (j = 0, len = ref.length; j < len; j++) {
+            m = ref[j];
             results.push(Util.snakeCase(m));
           }
           return results;
@@ -1363,10 +1112,10 @@
         transformations = (ref = this.get("transformation")) != null ? ref.serialize() : void 0;
         paramList = Util.without(paramList, "transformation");
         transformationList = (function() {
-          var i, len, ref1, results;
+          var j, len, ref1, results;
           results = [];
-          for (i = 0, len = paramList.length; i < len; i++) {
-            t = paramList[i];
+          for (j = 0, len = paramList.length; j < len; j++) {
+            t = paramList[j];
             results.push((ref1 = this.get(t)) != null ? ref1.serialize() : void 0);
           }
           return results;
@@ -1379,10 +1128,10 @@
             resultArray = transformations;
         }
         transformationString = ((function() {
-          var i, len, results;
+          var j, len, results;
           results = [];
-          for (i = 0, len = transformationList.length; i < len; i++) {
-            value = transformationList[i];
+          for (j = 0, len = transformationList.length; j < len; j++) {
+            value = transformationList[j];
             if (Util.isArray(value) && !Util.isEmpty(value) || !Util.isArray(value) && value) {
               results.push(value);
             }
@@ -1415,7 +1164,7 @@
        */
 
       TransformationBase.prototype.toHtmlAttributes = function() {
-        var height, i, j, k, key, len, len1, options, ref, ref1, ref2, ref3, ref4, value, width;
+        var height, j, k, key, l, len, len1, options, ref, ref1, ref2, ref3, ref4, value;
         options = {};
         ref = this.otherOptions;
         for (key in ref) {
@@ -1425,13 +1174,13 @@
           }
         }
         ref1 = Util.difference(this.keys(), this.PARAM_NAMES);
-        for (i = 0, len = ref1.length; i < len; i++) {
-          key = ref1[i];
+        for (j = 0, len = ref1.length; j < len; j++) {
+          key = ref1[j];
           options[key] = this.get(key).value;
         }
         ref2 = this.keys();
-        for (j = 0, len1 = ref2.length; j < len1; j++) {
-          k = ref2[j];
+        for (l = 0, len1 = ref2.length; l < len1; l++) {
+          k = ref2[l];
           if (/^html_/.exec(k)) {
             options[k.substr(5)] = this.getValue(k);
           }
@@ -1483,7 +1232,7 @@
       return TransformationBase;
 
     })();
-    return Transformation = (function(superClass) {
+    Transformation = (function(superClass) {
       extend(Transformation, superClass);
 
 
@@ -1694,7 +1443,7 @@
       };
 
       Transformation.prototype.size = function(value) {
-        var height, ref, width;
+        var height, ref;
         if (Util.isFunction(value != null ? value.split : void 0)) {
           ref = value.split('x'), width = ref[0], height = ref[1];
           this.width(width);
@@ -1757,23 +1506,195 @@
       return Transformation;
 
     })(TransformationBase);
-  });
 
-}).call(this);
+    /**
+     * Cloudinary configuration class
+     * Depends on 'utils'
+     */
+    Configuration = (function() {
 
-(function() {
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('tags/htmltag',['transformation', 'util'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('transformation'), require('util'));
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.HtmlTag = factory(root.cloudinary.Transformation, root.cloudinary.Util);
-    }
-  })(this, function(Transformation, Util) {
-    var HtmlTag;
-    return HtmlTag = (function() {
+      /**
+       * Defaults configuration.
+       * @const {Object} Configuration.DEFAULT_CONFIGURATION_PARAMS
+       */
+      var DEFAULT_CONFIGURATION_PARAMS, ref;
+
+      DEFAULT_CONFIGURATION_PARAMS = {
+        secure: (typeof window !== "undefined" && window !== null ? (ref = window.location) != null ? ref.protocol : void 0 : void 0) === 'https:'
+      };
+
+      Configuration.CONFIG_PARAMS = ["api_key", "api_secret", "cdn_subdomain", "cloud_name", "cname", "private_cdn", "protocol", "resource_type", "responsive_width", "secure", "secure_cdn_subdomain", "secure_distribution", "shorten", "type", "url_suffix", "use_root_path", "version"];
+
+
+      /**
+       * Cloudinary configuration class
+       * @constructor Configuration
+       * @param {Object} options - configuration parameters
+       */
+
+      function Configuration(options) {
+        if (options == null) {
+          options = {};
+        }
+        this.configuration = Util.cloneDeep(options);
+        Util.defaults(this.configuration, DEFAULT_CONFIGURATION_PARAMS);
+      }
+
+
+      /**
+       * Initialize the configuration.
+       * The function first tries to retrieve the configuration form the environment and then from the document.
+       * @function Configuration#init
+       * @return {Configuration} returns this for chaining
+       * @see fromDocument
+       * @see fromEnvironment
+       */
+
+      Configuration.prototype.init = function() {
+        this.fromEnvironment();
+        this.fromDocument();
+        return this;
+      };
+
+
+      /**
+       * Set a new configuration item
+       * @function Configuration#set
+       * @param {string} name - the name of the item to set
+       * @param {*} value - the value to be set
+       * @return {Configuration}
+       *
+       */
+
+      Configuration.prototype.set = function(name, value) {
+        this.configuration[name] = value;
+        return this;
+      };
+
+
+      /**
+       * Get the value of a configuration item
+       * @function Configuration#get
+       * @param {string} name - the name of the item to set
+       * @return {*} the configuration item
+       */
+
+      Configuration.prototype.get = function(name) {
+        return this.configuration[name];
+      };
+
+      Configuration.prototype.merge = function(config) {
+        if (config == null) {
+          config = {};
+        }
+        Util.assign(this.configuration, Util.cloneDeep(config));
+        return this;
+      };
+
+
+      /**
+       * Initialize Cloudinary from HTML meta tags.
+       * @function Configuration#fromDocument
+       * @return {Configuration}
+       * @example <meta name="cloudinary_cloud_name" content="mycloud">
+       *
+       */
+
+      Configuration.prototype.fromDocument = function() {
+        var el, j, len, meta_elements;
+        meta_elements = typeof document !== "undefined" && document !== null ? document.querySelectorAll('meta[name^="cloudinary_"]') : void 0;
+        if (meta_elements) {
+          for (j = 0, len = meta_elements.length; j < len; j++) {
+            el = meta_elements[j];
+            this.configuration[el.getAttribute('name').replace('cloudinary_', '')] = el.getAttribute('content');
+          }
+        }
+        return this;
+      };
+
+
+      /**
+       * Initialize Cloudinary from the `CLOUDINARY_URL` environment variable.
+       *
+       * This function will only run under Node.js environment.
+       * @function Configuration#fromEnvironment
+       * @requires Node.js
+       */
+
+      Configuration.prototype.fromEnvironment = function() {
+        var cloudinary_url, k, ref1, ref2, uri, v;
+        cloudinary_url = typeof process !== "undefined" && process !== null ? (ref1 = process.env) != null ? ref1.CLOUDINARY_URL : void 0 : void 0;
+        if (cloudinary_url != null) {
+          uri = require('url').parse(cloudinary_url, true);
+          this.configuration = {
+            cloud_name: uri.host,
+            api_key: uri.auth && uri.auth.split(":")[0],
+            api_secret: uri.auth && uri.auth.split(":")[1],
+            private_cdn: uri.pathname != null,
+            secure_distribution: uri.pathname && uri.pathname.substring(1)
+          };
+          if (uri.query != null) {
+            ref2 = uri.query;
+            for (k in ref2) {
+              v = ref2[k];
+              this.configuration[k] = v;
+            }
+          }
+        }
+        return this;
+      };
+
+
+      /**
+       * Create or modify the Cloudinary client configuration
+       *
+       * Warning: `config()` returns the actual internal configuration object. modifying it will change the configuration.
+       *
+       * This is a backward compatibility method. For new code, use get(), merge() etc.
+       * @function Configuration#config
+       * @param {hash|string|boolean} new_config
+       * @param {string} new_value
+       * @returns {*} configuration, or value
+       *
+       * @see {@link fromEnvironment} for initialization using environment variables
+       * @see {@link fromDocument} for initialization using HTML meta tags
+       */
+
+      Configuration.prototype.config = function(new_config, new_value) {
+        switch (false) {
+          case new_value === void 0:
+            this.set(new_config, new_value);
+            return this.configuration;
+          case !Util.isString(new_config):
+            return this.get(new_config);
+          case !Util.isPlainObject(new_config):
+            this.merge(new_config);
+            return this.configuration;
+          default:
+            return this.configuration;
+        }
+      };
+
+
+      /**
+       * Returns a copy of the configuration parameters
+       * @function Configuration#toOptions
+       * @returns {Object} a key:value collection of the configuration parameters
+       */
+
+      Configuration.prototype.toOptions = function() {
+        return Util.cloneDeep(this.configuration);
+      };
+
+      return Configuration;
+
+    })();
+
+    /**
+     * Generic HTML tag
+     * Depends on 'transformation', 'util'
+     */
+    HtmlTag = (function() {
 
       /**
        * Represents an HTML (DOM) tag
@@ -2008,28 +1929,58 @@
       return HtmlTag;
 
     })();
-  });
 
-}).call(this);
+    /**
+     * Image Tag
+     * Depends on 'tags/htmltag', 'cloudinary'
+     */
+    ImageTag = (function(superClass) {
+      extend(ImageTag, superClass);
 
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
 
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('tags/videotag',['tags/htmltag', 'util', 'cloudinary', 'require'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('tags/htmltag'), require('util'), require('cloudinary'), require);
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.VideoTag = factory(root.cloudinary.HtmlTag, root.cloudinary.Util, root.cloudinary.Cloudinary, function() {
-        return root.cloudinary.Cloudinary;
-      });
-    }
-  })(this, function(HtmlTag, Util, Cloudinary, require) {
-    var VideoTag;
-    return VideoTag = (function(superClass) {
+      /**
+       * Creates an HTML (DOM) Image tag using Cloudinary as the source.
+       * @constructor ImageTag
+       * @extends HtmlTag
+       * @param {string} [publicId]
+       * @param {Object} [options]
+       */
+
+      function ImageTag(publicId, options) {
+        if (options == null) {
+          options = {};
+        }
+        ImageTag.__super__.constructor.call(this, "img", publicId, options);
+      }
+
+
+      /** @override */
+
+      ImageTag.prototype.closeTag = function() {
+        return "";
+      };
+
+
+      /** @override */
+
+      ImageTag.prototype.attributes = function() {
+        var attr;
+        attr = ImageTag.__super__.attributes.call(this) || [];
+        if (attr['src'] == null) {
+          attr['src'] = new Cloudinary(this.getOptions()).url(this.publicId);
+        }
+        return attr;
+      };
+
+      return ImageTag;
+
+    })(HtmlTag);
+
+    /**
+     * Video Tag
+     * Depends on 'tags/htmltag', 'util', 'cloudinary'
+     */
+    VideoTag = (function(superClass) {
       var DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, VIDEO_TAG_PARAMS;
 
       extend(VideoTag, superClass);
@@ -2056,7 +2007,6 @@
         if (options == null) {
           options = {};
         }
-        Cloudinary || (Cloudinary = require('cloudinary'));
         options = Util.defaults({}, options, Cloudinary.DEFAULT_VIDEO_PARAMS);
         VideoTag.__super__.constructor.call(this, "video", publicId.replace(/\.(mp4|ogv|webm)$/, ''), options);
       }
@@ -2120,14 +2070,13 @@
         sourceTypes = this.transformation().getValue('source_types');
         sourceTransformation = this.transformation().getValue('source_transformation');
         fallback = this.transformation().getValue('fallback_content');
-        Cloudinary || (Cloudinary = require('cloudinary'));
         if (Util.isArray(sourceTypes)) {
           cld = new Cloudinary(this.getOptions());
           innerTags = (function() {
-            var i, len, results;
+            var j, len, results;
             results = [];
-            for (i = 0, len = sourceTypes.length; i < len; i++) {
-              srcType = sourceTypes[i];
+            for (j = 0, len = sourceTypes.length; j < len; j++) {
+              srcType = sourceTypes[j];
               transformation = sourceTransformation[srcType] || {};
               src = cld.url("" + this.publicId, Util.defaults({}, transformation, {
                 resource_type: 'video',
@@ -2149,8 +2098,7 @@
       };
 
       VideoTag.prototype.attributes = function() {
-        var a, attr, defaults, i, len, poster, ref, ref1, sourceTypes;
-        Cloudinary || (Cloudinary = require('cloudinary'));
+        var a, attr, defaults, j, len, poster, ref, ref1, sourceTypes;
         sourceTypes = this.getOption('source_types');
         poster = (ref = this.getOption('poster')) != null ? ref : {};
         if (Util.isPlainObject(poster)) {
@@ -2158,8 +2106,8 @@
           poster = new Cloudinary(this.getOptions()).url((ref1 = poster.public_id) != null ? ref1 : this.publicId, Util.defaults({}, poster, defaults));
         }
         attr = VideoTag.__super__.attributes.call(this) || [];
-        for (i = 0, len = attr.length; i < len; i++) {
-          a = attr[i];
+        for (j = 0, len = attr.length; j < len; j++) {
+          a = attr[j];
           if (!Util.contains(VIDEO_TAG_PARAMS)) {
             attr = a;
           }
@@ -2179,44 +2127,10 @@
       return VideoTag;
 
     })(HtmlTag);
-  });
-
-}).call(this);
-
-(function() {
-  (function(root, factory) {
-    var require;
-    if ((typeof define === 'function') && define.amd) {
-      return define('cloudinary',['utf8_encode', 'crc32', 'util', 'transformation', 'configuration', 'tags/imagetag', 'tags/videotag', 'require'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('utf8_encode'), require('crc32'), require('util'), require('transformation'), require('configuration'), require('tags/imagetag'), require('tags/videotag'), require);
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-
-      /**
-       * Resolves circular dependency
-       * @private
-       */
-      require = function(name) {
-        switch (name) {
-          case 'tags/imagetag':
-            return root.cloudinary.ImageTag;
-          case 'tags/videotag':
-            return root.cloudinary.VideoTag;
-        }
-      };
-      return root.cloudinary.Cloudinary = factory(root.cloudinary.utf8_encode, root.cloudinary.crc32, root.cloudinary.Util, root.cloudinary.Transformation, root.cloudinary.Configuration, root.cloudinary.ImageTag, root.cloudinary.VideoTag, require);
-    }
-  })(this, function(utf8_encode, crc32, Util, Transformation, Configuration, ImageTag, VideoTag, require) {
-
-    /**
-     * Main Cloudinary class
-     */
-    var Cloudinary;
-    return Cloudinary = (function() {
+    Cloudinary = (function() {
       var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, parentWidth;
 
-      VERSION = "2.0.5";
+      VERSION = "2.0.6";
 
       CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -2535,7 +2449,6 @@
 
       Cloudinary.prototype.imageTag = function(publicId, options) {
         options = Util.defaults({}, options, this.config());
-        ImageTag || (ImageTag = require('tags/imagetag'));
         return new ImageTag(publicId, options);
       };
 
@@ -2647,7 +2560,6 @@
        */
 
       Cloudinary.prototype.videoTag = function(publicId, options) {
-        VideoTag || (VideoTag = require('tags/videotag'));
         options = Util.defaults({}, options, this.config());
         return new VideoTag(publicId, options);
       };
@@ -2686,7 +2598,7 @@
           timeout = null;
           return window.addEventListener('resize', (function(_this) {
             return function() {
-              var debounce, ref2, ref3, reset, run, wait;
+              var debounce, ref2, ref3, reset, run, wait, waitFunc;
               debounce = (ref2 = (ref3 = _this.responsiveConfig['responsive_debounce']) != null ? ref3 : _this.config('responsive_debounce')) != null ? ref2 : 100;
               reset = function() {
                 if (timeout) {
@@ -2697,12 +2609,13 @@
               run = function() {
                 return _this.cloudinary_update('img.cld-responsive', _this.responsiveConfig);
               };
+              waitFunc = function() {
+                reset();
+                return run();
+              };
               wait = function() {
                 reset();
-                return setTimeout((function() {
-                  reset();
-                  return run();
-                }), debounce);
+                return setTimeout(waitFunc, debounce);
               };
               if (debounce) {
                 return wait();
@@ -2965,10 +2878,10 @@
 
 
       /**
-      * Provide a transformation object, initialized with own's options, for chaining purposes.
-      * @function Cloudinary#transformation
-      * @param {Object} options
-      * @return {Transformation}
+       * Provide a transformation object, initialized with own's options, for chaining purposes.
+       * @function Cloudinary#transformation
+       * @param {Object} options
+       * @return {Transformation}
        */
 
       Cloudinary.prototype.transformation = function(options) {
@@ -2978,90 +2891,7 @@
       return Cloudinary;
 
     })();
-  });
-
-}).call(this);
-
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define('tags/imagetag',['tags/htmltag', 'cloudinary', 'require'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('tags/htmltag'), require('cloudinary'), require);
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary.ImageTag = factory(root.cloudinary.HtmlTag, root.cloudinary.Cloudinary, function() {
-        return root.cloudinary.Cloudinary;
-      });
-    }
-  })(this, function(HtmlTag, Cloudinary, require) {
-    var ImageTag;
-    return ImageTag = (function(superClass) {
-      extend(ImageTag, superClass);
-
-
-      /**
-       * Creates an HTML (DOM) Image tag using Cloudinary as the source.
-       * @constructor ImageTag
-       * @extends HtmlTag
-       * @param {string} [publicId]
-       * @param {Object} [options]
-       */
-
-      function ImageTag(publicId, options) {
-        if (options == null) {
-          options = {};
-        }
-        ImageTag.__super__.constructor.call(this, "img", publicId, options);
-      }
-
-
-      /** @override */
-
-      ImageTag.prototype.closeTag = function() {
-        return "";
-      };
-
-
-      /** @override */
-
-      ImageTag.prototype.attributes = function() {
-        var attr;
-        Cloudinary || (Cloudinary = require('cloudinary'));
-        attr = ImageTag.__super__.attributes.call(this) || [];
-        if (attr['src'] == null) {
-          attr['src'] = new Cloudinary(this.getOptions()).url(this.publicId);
-        }
-        return attr;
-      };
-
-      return ImageTag;
-
-    })(HtmlTag);
-  });
-
-}).call(this);
-
-
-/**
- * Creates the namespace for Cloudinary
- */
-
-(function() {
-  (function(root, factory) {
-    if ((typeof define === 'function') && define.amd) {
-      return define(['utf8_encode', 'crc32', 'util', 'transformation', 'configuration', 'tags/htmltag', 'tags/imagetag', 'tags/videotag', 'cloudinary'], factory);
-    } else if (typeof exports === 'object') {
-      return module.exports = factory(require('utf8_encode'), require('crc32'), require('util'), require('transformation'), require('configuration'), require('tags/htmltag'), require('tags/imagetag'), require('tags/videotag'), require('cloudinary'));
-    } else {
-      root.cloudinary || (root.cloudinary = {});
-      return root.cloudinary = factory(root.cloudinary.utf8_encode, root.cloudinary.crc32, root.cloudinary.Util, root.cloudinary.Transformation, root.cloudinary.Configuration, root.cloudinary.HtmlTag, root.cloudinary.ImageTag, root.cloudinary.VideoTag, root.cloudinary.Cloudinary);
-    }
-  })(this, function(utf8_encode, crc32, Util, Transformation, Configuration, HtmlTag, ImageTag, VideoTag, Cloudinary) {
-    return {
+    cloudinary = {
       utf8_encode: utf8_encode,
       crc32: crc32,
       Util: Util,
@@ -3072,7 +2902,7 @@
       VideoTag: VideoTag,
       Cloudinary: Cloudinary
     };
+    return cloudinary;
   });
 
 }).call(this);
-
