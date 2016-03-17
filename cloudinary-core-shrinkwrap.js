@@ -4292,6 +4292,15 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       "||": 'or'
     };
 
+    Condition.PARAMETERS = {
+      "width": "w",
+      "height": "h",
+      "aspect_ratio": "ar",
+      "aspectRatio": "ar"
+    };
+
+    Condition.BOUNDRY = "[ _]+";
+
 
     /**
      * Represents a transformation condition
@@ -4343,7 +4352,12 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      */
 
     Condition.prototype.normalize = function(value) {
-      var list, v;
+      var list, longName, ref, shortName, v;
+      ref = Condition.PARAMETERS;
+      for (longName in ref) {
+        shortName = ref[longName];
+        value = value.replace(new RegExp(longName, "g"), shortName);
+      }
       list = value.split(/[ _]+/);
       list = (function() {
         var j, len, results;
