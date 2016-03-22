@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.0.7
+ * Cloudinary's JavaScript library - Version 2.0.8
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -21,14 +21,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   /**
    * @license
    * lodash 4.0.1 (Custom Build) <https://lodash.com/>
-   * Build: 'lodash include="isElement,trim,isString,isArray,isEmpty,assign,merge,camelCase,snakeCase,cloneDeep,compact,includes,defaults,difference,isFunction,functions,identity,isPlainObject" exports="none" --output build/lodash-shrinkwrap.js --development'
+   * Build: 'lodash include="isElement,trim,isString,isArray,isEmpty,assign,merge,camelCase,snakeCase,cloneDeep,compact,includes,defaults,difference,isFunction,functions,identity,isPlainObject" exports="none" iife="var lodash = _ = (function() {%output%; \nreturn lodash;\n}.call(this));" --output build/lodash-shrinkwrap.js --development'
    * Copyright 2012-2016 The Dojo Foundation <http://dojofoundation.org/>
    * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
    * Copyright 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
    * Available under MIT license <https://lodash.com/license>
    */
-  ;(function() {
-  
+  var lodash = _ = (function() {
     /** Used as a safe reference for 'undefined' in pre-ES5 environments. */
     var undefined;
   
@@ -3510,7 +3509,8 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     // prevents errors in cases where lodash is loaded by a script tag in the presence
     // of an AMD loader. See http://requirejs.org/docs/errors.html#mismatch for more details.
     (freeWindow || freeSelf || {})._ = lodash;
-  
+  ;
+  return lodash;
   }.call(this));
   ;
 
@@ -4296,7 +4296,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       "width": "w",
       "height": "h",
       "aspect_ratio": "ar",
-      "aspectRatio": "ar"
+      "aspectRatio": "ar",
+      "page_count": "pc",
+      "pageCount": "pc",
+      "face_count": "fc",
+      "faceCount": "fc"
     };
 
     Condition.BOUNDRY = "[ _]+";
@@ -4352,27 +4356,12 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      */
 
     Condition.prototype.normalize = function(value) {
-      var list, longName, ref, shortName, v;
-      ref = Condition.PARAMETERS;
-      for (longName in ref) {
-        shortName = ref[longName];
-        value = value.replace(new RegExp(longName, "g"), shortName);
-      }
-      list = value.split(/[ _]+/);
-      list = (function() {
-        var j, len, results;
-        results = [];
-        for (j = 0, len = list.length; j < len; j++) {
-          v = list[j];
-          if (Condition.OPERATORS[v] != null) {
-            results.push(Condition.OPERATORS[v]);
-          } else {
-            results.push(v);
-          }
-        }
-        return results;
-      })();
-      return list.join('_');
+      var replaceRE;
+      replaceRE = new RegExp("(" + Object.keys(Condition.PARAMETERS).join("|") + "|[=<>&|!]+)", "g");
+      value = value.replace(replaceRE, function(match) {
+        return Condition.OPERATORS[match] || Condition.PARAMETERS[match];
+      });
+      return value.replace(/[ _]+/g, '_');
     };
 
 
@@ -4497,8 +4486,8 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @return {Condition} this condition
      */
 
-    Condition.prototype.pages = function(operator, value) {
-      return this.predicate("pg", operator, value);
+    Condition.prototype.pageCount = function(operator, value) {
+      return this.predicate("pc", operator, value);
     };
 
 
@@ -4509,8 +4498,8 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @return {Condition} this condition
      */
 
-    Condition.prototype.faces = function(operator, value) {
-      return this.predicate("faces", operator, value);
+    Condition.prototype.faceCount = function(operator, value) {
+      return this.predicate("fc", operator, value);
     };
 
     return Condition;
@@ -5999,7 +5988,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, parentWidth;
 
-    VERSION = "2.0.7";
+    VERSION = "2.0.8";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -6791,7 +6780,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     ImageTag: ImageTag,
     VideoTag: VideoTag,
     Cloudinary: Cloudinary,
-    VERSION: "2.0.7"
+    VERSION: "2.0.8"
   };
   return cloudinary;
 });
