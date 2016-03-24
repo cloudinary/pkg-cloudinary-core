@@ -43,7 +43,6 @@ The following instructions describe the installation of the **client-side librar
 1. Install the files using:
 
    ```shell
-   npm install lodash
    npm install cloudinary-core
    ```
 1. Include the javascript file in your HTML. For Example:

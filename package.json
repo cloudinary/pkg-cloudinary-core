@@ -16,6 +16,8 @@
   "bugs": {
     "url": "https://github.com/cloudinary/cloudinary_js/issues"
   },
-  "homepage": "https://github.com/cloudinary/cloudinary_js"
-
+  "homepage": "https://github.com/cloudinary/cloudinary_js",
+  "dependencies": {
+    "lodash": "^4.6.1"
+  }
 }
