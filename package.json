@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/cloudinary/cloudinary_js",
   "dependencies": {
-    "lodash": "^4.6.1"
+    "lodash": "^4.6.1",
+    "url": "^0.11.0"
   }
 }
