@@ -27,7 +27,7 @@ Cloudinary provides URL and HTTP based APIs that can be easily integrated with a
 1. Include the javascript file in your HTML. For Example:
 
    ```html
-   <script src="bower_componenets/lodash/lodash.js"                  type="text/javascript"></script>
+   <script src="bower_components/lodash/lodash.js"                  type="text/javascript"></script>
    <script src="bower_components/cloudinary-core/cloudinary-core.js" type="text/javascript"></script>
    ```
 
