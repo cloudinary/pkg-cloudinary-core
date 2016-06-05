@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.0.8
+ * Cloudinary's JavaScript library - Version 2.0.9
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -9,13 +9,20 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   hasProp = {}.hasOwnProperty;
 
 (function(root, factory) {
+  var name, ref, results, value;
   if ((typeof define === 'function') && define.amd) {
     return define(factory);
   } else if (typeof exports === 'object') {
     return module.exports = factory();
   } else {
     root.cloudinary || (root.cloudinary = {});
-    return root.cloudinary = factory();
+    ref = factory();
+    results = [];
+    for (name in ref) {
+      value = ref[name];
+      results.push(root.cloudinary[name] = value);
+    }
+    return results;
   }
 })(this, function() {
   /**
@@ -3527,7 +3534,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    * @returns the value associated with the `name`
    *
    */
-  var ArrayParam, Cloudinary, Condition, Configuration, HtmlTag, ImageTag, Param, RangeParam, RawParam, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
+  var ArrayParam, Cloudinary, Condition, Configuration, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
   getData = function(element, name) {
     if (_.isElement(element)) {
       return element.getAttribute("data-" + name);
@@ -3959,12 +3966,12 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @param {string} name - The name of the parameter in snake_case
      * @param {string} short - The name of the serialized form of the parameter.
      *                         If a value is not provided, the parameter will not be serialized.
-     * @param {function} [process=Util.identity ] - Manipulate origValue when value is called
+     * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
      * @ignore
      */
     function Param(name, short, process) {
       if (process == null) {
-        process = Util.identity;
+        process = cloudinary.Util.identity;
       }
 
       /**
@@ -4009,7 +4016,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     Param.prototype.serialize = function() {
       var val, valid;
       val = this.value();
-      valid = Util.isArray(val) || Util.isPlainObject(val) || Util.isString(val) ? !Util.isEmpty(val) : val != null;
+      valid = cloudinary.Util.isArray(val) || cloudinary.Util.isPlainObject(val) || cloudinary.Util.isString(val) ? !cloudinary.Util.isEmpty(val) : val != null;
       if ((this.short != null) && valid) {
         return this.short + "_" + val;
       } else {
@@ -4035,7 +4042,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       if (arg == null) {
         arg = [];
       }
-      if (Util.isArray(arg)) {
+      if (cloudinary.Util.isArray(arg)) {
         return arg;
       } else {
         return [arg];
@@ -4091,7 +4098,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @param {string} short - The name of the serialized form of the parameter
      *                         If a value is not provided, the parameter will not be serialized.
      * @param {string} [sep='.'] - The separator to use when joining the array elements together
-     * @param {function} [process=Util.identity ] - Manipulate origValue when value is called
+     * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
      * @class ArrayParam
      * @extends Param
      * @ignore
@@ -4109,7 +4116,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       var array, flat, t;
       if (this.short != null) {
         array = this.value();
-        if (Util.isEmpty(array)) {
+        if (cloudinary.Util.isEmpty(array)) {
           return '';
         } else {
           flat = (function() {
@@ -4118,7 +4125,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
             results = [];
             for (j = 0, len = ref.length; j < len; j++) {
               t = ref[j];
-              if (Util.isFunction(t.serialize)) {
+              if (cloudinary.Util.isFunction(t.serialize)) {
                 results.push(t.serialize());
               } else {
                 results.push(t);
@@ -4134,7 +4141,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     };
 
     ArrayParam.prototype.set = function(origValue) {
-      if ((origValue == null) || Util.isArray(origValue)) {
+      if ((origValue == null) || cloudinary.Util.isArray(origValue)) {
         return ArrayParam.__super__.set.call(this, origValue);
       } else {
         return ArrayParam.__super__.set.call(this, [origValue]);
@@ -4153,7 +4160,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @param {string} name - The name of the parameter in snake_case
      * @param {string} [short='t'] - The name of the serialized form of the parameter
      * @param {string} [sep='.'] - The separator to use when joining the array elements together
-     * @param {function} [process=Util.identity ] - Manipulate origValue when value is called
+     * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
      * @class TransformationParam
      * @extends Param
      * @ignore
@@ -4172,11 +4179,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
 
     TransformationParam.prototype.serialize = function() {
       var joined, result, t;
-      if (Util.isEmpty(this.value())) {
+      if (cloudinary.Util.isEmpty(this.value())) {
         return '';
-      } else if (Util.allStrings(this.value())) {
+      } else if (cloudinary.Util.allStrings(this.value())) {
         joined = this.value().join(this.sep);
-        if (!Util.isEmpty(joined)) {
+        if (!cloudinary.Util.isEmpty(joined)) {
           return this.short + "_" + joined;
         } else {
           return '';
@@ -4189,11 +4196,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
           for (j = 0, len = ref.length; j < len; j++) {
             t = ref[j];
             if (t != null) {
-              if (Util.isString(t) && !Util.isEmpty(t)) {
+              if (cloudinary.Util.isString(t) && !cloudinary.Util.isEmpty(t)) {
                 results.push(this.short + "_" + t);
-              } else if (Util.isFunction(t.serialize)) {
+              } else if (cloudinary.Util.isFunction(t.serialize)) {
                 results.push(t.serialize());
-              } else if (Util.isPlainObject(t) && !Util.isEmpty(t)) {
+              } else if (cloudinary.Util.isPlainObject(t) && !cloudinary.Util.isEmpty(t)) {
                 results.push(new Transformation(t).serialize());
               } else {
                 results.push(void 0);
@@ -4202,13 +4209,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
           }
           return results;
         }).call(this);
-        return Util.compact(result);
+        return cloudinary.Util.compact(result);
       }
     };
 
     TransformationParam.prototype.set = function(origValue1) {
       this.origValue = origValue1;
-      if (Util.isArray(this.origValue)) {
+      if (cloudinary.Util.isArray(this.origValue)) {
         return TransformationParam.__super__.set.call(this, this.origValue);
       } else {
         return TransformationParam.__super__.set.call(this, [this.origValue]);
@@ -4258,7 +4265,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
 
     function RawParam(name, short, process) {
       if (process == null) {
-        process = Util.identity;
+        process = cloudinary.Util.identity;
       }
       RawParam.__super__.constructor.call(this, name, short, process);
     }
@@ -4270,12 +4277,112 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     return RawParam;
 
   })(Param);
+  LayerParam = (function(superClass) {
+    var LAYER_KEYWORD_PARAMS;
+
+    extend(LayerParam, superClass);
+
+    function LayerParam() {
+      return LayerParam.__super__.constructor.apply(this, arguments);
+    }
+
+    LayerParam.prototype.value = function() {
+      var components, format, layer, publicId, resourceType, text, textStyle, type;
+      layer = this.origValue;
+      if (cloudinary.Util.isPlainObject(layer)) {
+        publicId = layer.public_id;
+        format = layer.format;
+        resourceType = layer.resource_type || "image";
+        type = layer.type || "upload";
+        text = layer.text;
+        textStyle = null;
+        components = [];
+        if (publicId != null) {
+          publicId = publicId.replace(/\//g, ":");
+          if (format != null) {
+            publicId = publicId + "." + format;
+          }
+        }
+        if ((text == null) && resourceType !== "text") {
+          if (cloudinary.Util.isEmpty(publicId)) {
+            throw "Must supply public_id for resource_type layer_parameter";
+          }
+          if (resourceType === "subtitles") {
+            textStyle = this.textStyle(layer);
+          }
+        } else {
+          resourceType = "text";
+          type = null;
+          textStyle = this.textStyle(layer);
+          if (text != null) {
+            if (!((publicId != null) ^ (textStyle != null))) {
+              throw "Must supply either style parameters or a public_id when providing text parameter in a text overlay/underlay";
+            }
+            text = cloudinary.Util.smart_escape(cloudinary.Util.smart_escape(text, /([,\/])/));
+          }
+        }
+        if (resourceType !== "image") {
+          components.push(resourceType);
+        }
+        if (type !== "upload") {
+          components.push(type);
+        }
+        components.push(textStyle);
+        components.push(publicId);
+        components.push(text);
+        layer = cloudinary.Util.compact(components).join(":");
+      }
+      return layer;
+    };
+
+    LAYER_KEYWORD_PARAMS = [["font_weight", "normal"], ["font_style", "normal"], ["text_decoration", "none"], ["text_align", null], ["stroke", "none"]];
+
+    LayerParam.prototype.textStyle = function(layer) {
+      var attr, defaultValue, fontFamily, fontSize, keywords, letterSpacing, lineSpacing;
+      fontFamily = layer.font_family;
+      fontSize = layer.font_size;
+      keywords = (function() {
+        var j, len, ref, results;
+        results = [];
+        for (j = 0, len = LAYER_KEYWORD_PARAMS.length; j < len; j++) {
+          ref = LAYER_KEYWORD_PARAMS[j], attr = ref[0], defaultValue = ref[1];
+          if (layer[attr] !== defaultValue) {
+            results.push(layer[attr]);
+          }
+        }
+        return results;
+      })();
+      letterSpacing = layer.letter_spacing;
+      if (!cloudinary.Util.isEmpty(letterSpacing)) {
+        keywords.push("letter_spacing_" + letterSpacing);
+      }
+      lineSpacing = layer.line_spacing;
+      if (!cloudinary.Util.isEmpty(lineSpacing)) {
+        keywords.push("line_spacing_" + lineSpacing);
+      }
+      if (!cloudinary.Util.isEmpty(fontSize) || !cloudinary.Util.isEmpty(fontFamily) || !cloudinary.Util.isEmpty(keywords)) {
+        if (cloudinary.Util.isEmpty(fontFamily)) {
+          throw "Must supply font_family for text in overlay/underlay";
+        }
+        if (cloudinary.Util.isEmpty(fontSize)) {
+          throw "Must supply font_size for text in overlay/underlay";
+        }
+        keywords.unshift(fontSize);
+        keywords.unshift(fontFamily);
+        return cloudinary.Util.compact(keywords).join("_");
+      }
+    };
+
+    return LayerParam;
+
+  })(Param);
   parameters = {};
   parameters.Param = Param;
   parameters.ArrayParam = ArrayParam;
   parameters.RangeParam = RangeParam;
   parameters.RawParam = RawParam;
   parameters.TransformationParam = TransformationParam;
+  parameters.LayerParam = LayerParam;
   Condition = (function() {
 
     /**
@@ -4672,6 +4779,10 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
         }
         process = lastArgCallback(arguments);
         trans[name] = new TransformationParam(name, abbr, sep, process).set(value);
+        return this;
+      });
+      this.layerParam || (this.layerParam = function(value, name, abbr) {
+        trans[name] = new LayerParam(name, abbr).set(value);
         return this;
       });
 
@@ -5254,6 +5365,10 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       }
     };
 
+    Transformation.prototype.keyframeInterval = function(value) {
+      return this.param(value, "keyframe_interval", "ki");
+    };
+
     Transformation.prototype.offset = function(value) {
       var end_o, ref, start_o;
       ref = Util.isFunction(value != null ? value.split : void 0) ? value.split('..') : Util.isArray(value) ? value : [null, null], start_o = ref[0], end_o = ref[1];
@@ -5270,7 +5385,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     };
 
     Transformation.prototype.overlay = function(value) {
-      return this.param(value, "overlay", "l");
+      return this.layerParam(value, "overlay", "l");
     };
 
     Transformation.prototype.page = function(value) {
@@ -5318,12 +5433,16 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       return this.rangeParam(value, "start_offset", "so");
     };
 
+    Transformation.prototype.streamingProfile = function(value) {
+      return this.param(value, "streaming_profile", "sp");
+    };
+
     Transformation.prototype.transformation = function(value) {
       return this.transformationParam(value, "transformation", "t");
     };
 
     Transformation.prototype.underlay = function(value) {
-      return this.param(value, "underlay", "u");
+      return this.layerParam(value, "underlay", "u");
     };
 
     Transformation.prototype.videoCodec = function(value) {
@@ -5606,7 +5725,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @protected
      * @param {string} key - attribute name
      * @param {*|boolean} value - the value of the attribute. If the value is boolean `true`, return the key only.
-     * @returns {string} the attribute
+     * @returns {string} the attribute  
      *
      */
 
@@ -5985,10 +6104,256 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     return VideoTag;
 
   })(HtmlTag);
+  Layer = (function() {
+
+    /**
+     * Layer
+     * @constructor Layer
+     * @param {Object} options - layer parameters
+     */
+    function Layer(options) {
+      this.options = {};
+      if (options != null) {
+        this.options.resourceType = options["resource_type"];
+        this.options.type = options["type"];
+        this.options.publicId = options["public_id"];
+        this.options.format = options["format"];
+      }
+    }
+
+    Layer.prototype.resourceType = function(value) {
+      this.options.resourceType = value;
+      return this;
+    };
+
+    Layer.prototype.type = function(value) {
+      this.options.type = value;
+      return this;
+    };
+
+    Layer.prototype.publicId = function(value) {
+      this.options.publicId = value;
+      return this;
+    };
+
+
+    /**
+     * Get the public ID, formatted for layer parameter
+     * @function Layer#getPublicId
+     * @return {String} public ID
+     */
+
+    Layer.prototype.getPublicId = function() {
+      var ref;
+      return (ref = this.options.publicId) != null ? ref.replace(/\//g, ":") : void 0;
+    };
+
+
+    /**
+     * Get the public ID, with format if present
+     * @function Layer#getFullPublicId
+     * @return {String} public ID
+     */
+
+    Layer.prototype.getFullPublicId = function() {
+      if (this.options.format != null) {
+        return this.getPublicId() + "." + this.options.format;
+      } else {
+        return this.getPublicId();
+      }
+    };
+
+    Layer.prototype.format = function(value) {
+      this.options.format = value;
+      return this;
+    };
+
+
+    /**
+     * generate the string representation of the layer
+     * @function Layer#toString
+     */
+
+    Layer.prototype.toString = function() {
+      var components;
+      components = [];
+      if (this.options.publicId == null) {
+        throw "Must supply publicId";
+      }
+      if (!(this.options.resourceType === "image")) {
+        components.push(this.options.resourceType);
+      }
+      if (!(this.options.type === "upload")) {
+        components.push(this.options.type);
+      }
+      components.push(this.getFullPublicId());
+      return Util.compact(components).join(":");
+    };
+
+    return Layer;
+
+  })();
+  TextLayer = (function(superClass) {
+    var textStyleIdentifier;
+
+    extend(TextLayer, superClass);
+
+
+    /**
+     * @constructor TextLayer
+     * @param {Object} options - layer parameters
+     */
+
+    function TextLayer(options) {
+      TextLayer.__super__.constructor.call(this, options);
+      this.options.resourceType = "text";
+    }
+
+    TextLayer.prototype.resourceType = function(resourceType) {
+      throw "Cannot modify resourceType for text layers";
+    };
+
+    TextLayer.prototype.type = function(type) {
+      throw "Cannot modify type for text layers";
+    };
+
+    TextLayer.prototype.format = function(format) {
+      throw "Cannot modify format for text layers";
+    };
+
+    TextLayer.prototype.fontFamily = function(fontFamily) {
+      this.options.fontFamily = fontFamily;
+      return this;
+    };
+
+    TextLayer.prototype.fontSize = function(fontSize) {
+      this.options.fontSize = fontSize;
+      return this;
+    };
+
+    TextLayer.prototype.fontWeight = function(fontWeight) {
+      this.options.fontWeight = fontWeight;
+      return this;
+    };
+
+    TextLayer.prototype.fontStyle = function(fontStyle) {
+      this.options.fontStyle = fontStyle;
+      return this;
+    };
+
+    TextLayer.prototype.textDecoration = function(textDecoration) {
+      this.options.textDecoration = textDecoration;
+      return this;
+    };
+
+    TextLayer.prototype.textAlign = function(textAlign) {
+      this.options.textAlign = textAlign;
+      return this;
+    };
+
+    TextLayer.prototype.stroke = function(stroke) {
+      this.options.stroke = stroke;
+      return this;
+    };
+
+    TextLayer.prototype.letterSpacing = function(letterSpacing) {
+      this.options.letterSpacing = letterSpacing;
+      return this;
+    };
+
+    TextLayer.prototype.lineSpacing = function(lineSpacing) {
+      this.options.lineSpacing = lineSpacing;
+      return this;
+    };
+
+    TextLayer.prototype.text = function(text) {
+      this.options.text = text;
+      return this;
+    };
+
+
+    /**
+     * generate the string representation of the layer
+     * @function TextLayer#toString
+     * @return {String}
+     */
+
+    TextLayer.prototype.toString = function() {
+      var components, publicId, text;
+      if (this.options.publicId != null) {
+        publicId = this.getFullPublicId();
+      } else if (this.options.text != null) {
+        text = encodeURIComponent(this.options.text).replace(/%2C/g, "%E2%80%9A").replace(/\//g, "%E2%81%84");
+      } else {
+        throw "Must supply either text or public_id.";
+      }
+      components = [this.options.resourceType, textStyleIdentifier.call(this), publicId, text];
+      return Util.compact(components).join(":");
+    };
+
+    textStyleIdentifier = function() {
+      var components, fontSize;
+      components = [];
+      if (this.options.fontWeight !== "normal") {
+        components.push(this.options.fontWeight);
+      }
+      if (this.options.fontStyle !== "normal") {
+        components.push(this.options.fontStyle);
+      }
+      if (this.options.textDecoration !== "none") {
+        components.push(this.options.textDecoration);
+      }
+      components.push(this.options.textAlign);
+      if (this.options.stroke !== "none") {
+        components.push(this.options.stroke);
+      }
+      if (!Util.isEmpty(this.options.letterSpacing)) {
+        components.push("letter_spacing_" + this.options.letterSpacing);
+      }
+      if (this.options.lineSpacing != null) {
+        components.push("line_spacing_" + this.options.lineSpacing);
+      }
+      if (this.options.fontSize != null) {
+        fontSize = "" + this.options.fontSize;
+      }
+      components.unshift(this.options.fontFamily, fontSize);
+      components = Util.compact(components).join("_");
+      if (!Util.isEmpty(components)) {
+        if (Util.isEmpty(this.options.fontFamily)) {
+          throw "Must supply fontFamily.";
+        }
+        if (Util.isEmpty(fontSize)) {
+          throw "Must supply fontSize.";
+        }
+      }
+      return components;
+    };
+
+    return TextLayer;
+
+  })(Layer);
+  SubtitlesLayer = (function(superClass) {
+    extend(SubtitlesLayer, superClass);
+
+
+    /**
+     * Represent a subtitles layer
+     * @constructor SubtitlesLayer
+     * @param {Object} options - layer parameters
+     */
+
+    function SubtitlesLayer(options) {
+      SubtitlesLayer.__super__.constructor.call(this, options);
+      this.options.resourceType = "subtitles";
+    }
+
+    return SubtitlesLayer;
+
+  })(TextLayer);
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, parentWidth;
 
-    VERSION = "2.0.8";
+    VERSION = "2.0.9";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -6779,8 +7144,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     HtmlTag: HtmlTag,
     ImageTag: ImageTag,
     VideoTag: VideoTag,
+    Layer: Layer,
+    TextLayer: TextLayer,
+    SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.0.8"
+    VERSION: "2.0.9"
   };
   return cloudinary;
 });
