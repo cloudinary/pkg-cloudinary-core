@@ -41,8 +41,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    */
   var ArrayParam, Cloudinary, Condition, Configuration, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
   getData = function(element, name) {
-    if (_.isElement(element)) {
-      return element.getAttribute("data-" + name);
+    switch (false) {
+      case !_.isFunction(element != null ? element.getAttribute : void 0):
+        return element.getAttribute("data-" + name);
+      case !_.isFunction(element != null ? element.data : void 0):
+        return element.data(name);
+      case !_.isFunction(element != null ? element.getAttr : void 0):
+        return element.getAttr("data-" + name);
     }
   };
 
@@ -56,8 +61,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    *
    */
   setData = function(element, name, value) {
-    if (_.isElement(element)) {
-      return element.setAttribute("data-" + name, value);
+    switch (false) {
+      case !_.isFunction(element != null ? element.setAttribute : void 0):
+        return element.setAttribute("data-" + name, value);
+      case !_.isFunction(element != null ? element.data : void 0):
+        return element.data(name, value);
+      case !_.isFunction(element != null ? element.setAttr : void 0):
+        return element.setAttr("data-" + name, value);
     }
   };
 
@@ -71,8 +81,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    *
    */
   getAttribute = function(element, name) {
-    if (_.isElement(element)) {
-      return element.getAttribute(name);
+    switch (false) {
+      case !_.isFunction(element != null ? element.getAttribute : void 0):
+        return element.getAttribute(name);
+      case !_.isFunction(element != null ? element.attr : void 0):
+        return element.attr(name);
+      case !_.isFunction(element != null ? element.getAttr : void 0):
+        return element.getAttr(name);
     }
   };
 
@@ -86,8 +101,13 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    *
    */
   setAttribute = function(element, name, value) {
-    if (_.isElement(element)) {
-      return element.setAttribute(name, value);
+    switch (false) {
+      case !_.isFunction(element != null ? element.setAttribute : void 0):
+        return element.setAttribute(name, value);
+      case !_.isFunction(element != null ? element.attr : void 0):
+        return element.attr(name, value);
+      case !_.isFunction(element != null ? element.setAttr : void 0):
+        return element.setAttr(name, value);
     }
   };
   removeAttribute = function(element, name) {
@@ -1767,16 +1787,18 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     };
 
     Transformation.prototype.dpr = function(value) {
-      return this.param(value, "dpr", "dpr", function(dpr) {
-        dpr = dpr.toString();
-        if (dpr === "auto") {
-          return "1.0";
-        } else if (dpr != null ? dpr.match(/^\d+$/) : void 0) {
-          return dpr + ".0";
-        } else {
-          return dpr;
-        }
-      });
+      return this.param(value, "dpr", "dpr", (function(_this) {
+        return function(dpr) {
+          dpr = dpr.toString();
+          if ((dpr === "auto") && _this.getValue("client_hints") !== true) {
+            return "1.0";
+          } else if (dpr != null ? dpr.match(/^\d+$/) : void 0) {
+            return dpr + ".0";
+          } else {
+            return dpr;
+          }
+        };
+      })(this));
     };
 
     Transformation.prototype.effect = function(value) {
@@ -3156,17 +3178,21 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      */
 
     Cloudinary.prototype.image = function(publicId, options) {
-      var img;
+      var client_hints, img;
       if (options == null) {
         options = {};
       }
       img = this.imageTag(publicId, options);
-      if (options.src == null) {
+      client_hints = options.client_hints === true || this.config('client_hints') === true;
+      console.log("client_hints is " + client_hints);
+      if (!((options.src != null) || client_hints)) {
         img.setAttr("src", '');
       }
       img = img.toDOM();
-      Util.setData(img, 'src-cache', this.url(publicId, options));
-      this.cloudinary_update(img, options);
+      if (!client_hints) {
+        Util.setData(img, 'src-cache', this.url(publicId, options));
+        this.cloudinary_update(img, options);
+      }
       return img;
     };
 
@@ -3568,7 +3594,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      */
 
     Cloudinary.prototype.cloudinary_update = function(elements, options) {
-      var containerWidth, imageWidth, j, len, ref, ref1, ref2, ref3, requestedWidth, responsiveClass, roundDpr, setUrl, src, tag;
+      var client_hints, containerWidth, dataSrc, imageWidth, j, len, ref, ref1, ref2, ref3, requestedWidth, responsive, responsiveClass, roundDpr, setUrl, tag;
       if (options == null) {
         options = {};
       }
@@ -3592,13 +3618,15 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
           continue;
         }
         setUrl = true;
-        if (options.responsive) {
+        client_hints = options.client_hints === true || this.config('client_hints') === true;
+        responsive = options.responsive === true || this.config('responsive') === true;
+        if (responsive && !client_hints) {
           Util.addClass(tag, responsiveClass);
         }
-        src = Util.getData(tag, 'src-cache') || Util.getData(tag, 'src');
-        if (!Util.isEmpty(src)) {
-          src = src.replace(/\bdpr_(1\.0|auto)\b/g, 'dpr_' + this.device_pixel_ratio(roundDpr));
-          if (Util.hasClass(tag, responsiveClass) && /\bw_auto\b/.exec(src)) {
+        dataSrc = Util.getData(tag, 'src-cache') || Util.getData(tag, 'src');
+        if (!Util.isEmpty(dataSrc)) {
+          dataSrc = dataSrc.replace(/\bdpr_(1\.0|auto)\b/g, 'dpr_' + this.device_pixel_ratio(roundDpr));
+          if (Util.hasClass(tag, responsiveClass) && /\bw_auto\b/.exec(dataSrc)) {
             containerWidth = parentWidth(tag);
             if (containerWidth !== 0) {
               requestedWidth = applyBreakpoints.call(this, tag, containerWidth, options);
@@ -3607,7 +3635,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
                 imageWidth = requestedWidth;
                 Util.setData(tag, 'width', requestedWidth);
               }
-              src = src.replace(/\bw_auto\b/g, 'w_' + imageWidth);
+              dataSrc = dataSrc.replace(/\bw_auto\b/g, 'w_' + imageWidth);
               Util.removeAttribute(tag, 'width');
               if (!options.responsive_preserve_height) {
                 Util.removeAttribute(tag, 'height');
@@ -3617,7 +3645,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
             }
           }
           if (setUrl) {
-            Util.setAttribute(tag, 'src', src);
+            Util.setAttribute(tag, 'src', dataSrc);
           }
         }
       }
