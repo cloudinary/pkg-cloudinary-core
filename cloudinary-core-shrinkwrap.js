@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.1.1
+ * Cloudinary's JavaScript library - Version 2.1.2
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -4003,12 +4003,12 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * Represents a single parameter
      * @class Param
      * @param {string} name - The name of the parameter in snake_case
-     * @param {string} short - The name of the serialized form of the parameter.
+     * @param {string} shortName - The name of the serialized form of the parameter.
      *                         If a value is not provided, the parameter will not be serialized.
      * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
      * @ignore
      */
-    function Param(name, short, process) {
+    function Param(name, shortName, process) {
       if (process == null) {
         process = cloudinary.Util.identity;
       }
@@ -4021,9 +4021,9 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
 
       /**
        * The name of the serialized form of the parameter
-       * @member {string} Param#short
+       * @member {string} Param#shortName
        */
-      this.short = short;
+      this.shortName = shortName;
 
       /**
        * Manipulate origValue when value is called
@@ -4056,8 +4056,8 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       var val, valid;
       val = this.value();
       valid = cloudinary.Util.isArray(val) || cloudinary.Util.isPlainObject(val) || cloudinary.Util.isString(val) ? !cloudinary.Util.isEmpty(val) : val != null;
-      if ((this.short != null) && valid) {
-        return this.short + "_" + val;
+      if ((this.shortName != null) && valid) {
+        return this.shortName + "_" + val;
       } else {
         return '';
       }
@@ -4134,7 +4134,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     /**
      * A parameter that represents an array
      * @param {string} name - The name of the parameter in snake_case
-     * @param {string} short - The name of the serialized form of the parameter
+     * @param {string} shortName - The name of the serialized form of the parameter
      *                         If a value is not provided, the parameter will not be serialized.
      * @param {string} [sep='.'] - The separator to use when joining the array elements together
      * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
@@ -4143,17 +4143,17 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @ignore
      */
 
-    function ArrayParam(name, short, sep, process) {
+    function ArrayParam(name, shortName, sep, process) {
       if (sep == null) {
         sep = '.';
       }
       this.sep = sep;
-      ArrayParam.__super__.constructor.call(this, name, short, process);
+      ArrayParam.__super__.constructor.call(this, name, shortName, process);
     }
 
     ArrayParam.prototype.serialize = function() {
       var array, flat, t;
-      if (this.short != null) {
+      if (this.shortName != null) {
         array = this.value();
         if (cloudinary.Util.isEmpty(array)) {
           return '';
@@ -4172,7 +4172,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
             }
             return results;
           }).call(this);
-          return this.short + "_" + (flat.join(this.sep));
+          return this.shortName + "_" + (flat.join(this.sep));
         }
       } else {
         return '';
@@ -4197,7 +4197,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     /**
      * A parameter that represents a transformation
      * @param {string} name - The name of the parameter in snake_case
-     * @param {string} [short='t'] - The name of the serialized form of the parameter
+     * @param {string} [shortName='t'] - The name of the serialized form of the parameter
      * @param {string} [sep='.'] - The separator to use when joining the array elements together
      * @param {function} [process=cloudinary.Util.identity ] - Manipulate origValue when value is called
      * @class TransformationParam
@@ -4205,15 +4205,15 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @ignore
      */
 
-    function TransformationParam(name, short, sep, process) {
-      if (short == null) {
-        short = "t";
+    function TransformationParam(name, shortName, sep, process) {
+      if (shortName == null) {
+        shortName = "t";
       }
       if (sep == null) {
         sep = '.';
       }
       this.sep = sep;
-      TransformationParam.__super__.constructor.call(this, name, short, process);
+      TransformationParam.__super__.constructor.call(this, name, shortName, process);
     }
 
     TransformationParam.prototype.serialize = function() {
@@ -4223,7 +4223,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       } else if (cloudinary.Util.allStrings(this.value())) {
         joined = this.value().join(this.sep);
         if (!cloudinary.Util.isEmpty(joined)) {
-          return this.short + "_" + joined;
+          return this.shortName + "_" + joined;
         } else {
           return '';
         }
@@ -4236,7 +4236,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
             t = ref[j];
             if (t != null) {
               if (cloudinary.Util.isString(t) && !cloudinary.Util.isEmpty(t)) {
-                results.push(this.short + "_" + t);
+                results.push(this.shortName + "_" + t);
               } else if (cloudinary.Util.isFunction(t.serialize)) {
                 results.push(t.serialize());
               } else if (cloudinary.Util.isPlainObject(t) && !cloudinary.Util.isEmpty(t)) {
@@ -4271,7 +4271,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     /**
      * A parameter that represents a range
      * @param {string} name - The name of the parameter in snake_case
-     * @param {string} short - The name of the serialized form of the parameter
+     * @param {string} shortName - The name of the serialized form of the parameter
      *                         If a value is not provided, the parameter will not be serialized.
      * @param {function} [process=norm_range_value ] - Manipulate origValue when value is called
      * @class RangeParam
@@ -4279,11 +4279,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
      * @ignore
      */
 
-    function RangeParam(name, short, process) {
+    function RangeParam(name, shortName, process) {
       if (process == null) {
         process = this.norm_range_value;
       }
-      RangeParam.__super__.constructor.call(this, name, short, process);
+      RangeParam.__super__.constructor.call(this, name, shortName, process);
     }
 
     RangeParam.norm_range_value = function(value) {
@@ -4302,11 +4302,11 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   RawParam = (function(superClass) {
     extend(RawParam, superClass);
 
-    function RawParam(name, short, process) {
+    function RawParam(name, shortName, process) {
       if (process == null) {
         process = cloudinary.Util.identity;
       }
-      RawParam.__super__.constructor.call(this, name, short, process);
+      RawParam.__super__.constructor.call(this, name, shortName, process);
     }
 
     RawParam.prototype.serialize = function() {
@@ -6400,7 +6400,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.1.1";
+    VERSION = "2.1.2";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -7224,7 +7224,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.1.1"
+    VERSION: "2.1.2"
   };
   return cloudinary;
 });
