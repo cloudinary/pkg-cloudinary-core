@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cloudinary/cloudinary_js.svg?branch=master)](https://travis-ci.org/cloudinary/cloudinary_js)
+
 :information_source: This is a distribution repository for `bower` and `npm`. The sources for this repository are maintained at the [cloudinary_js repository](https://github.com/cloudinary/cloudinary_js). Please submit issues and pull requests to that repository.
 
 # Cloudinary Client Side JavaScript Library<br>`bower` and `npm` repository
