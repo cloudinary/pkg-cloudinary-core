@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.1.2
+ * Cloudinary's JavaScript library - Version 2.1.3
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -39,7 +39,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
    * @returns the value associated with the `name`
    *
    */
-  var ArrayParam, Cloudinary, Condition, Configuration, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
+  var ArrayParam, Cloudinary, Condition, Configuration, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, cloudinary, contains, crc32, cssExpand, cssValue, curCSS, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, parameters, pnum, removeAttribute, rmargin, rnumnonpx, setAttribute, setAttributes, setData, utf8_encode, width, without;
   getData = function(element, name) {
     var ref;
     switch (false) {
@@ -245,6 +245,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
       return val;
     }
   };
+  rmargin = /^margin/;
   pnum = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source;
   rnumnonpx = new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
   getWidthOrHeight = function(elem, name, extra) {
@@ -2905,7 +2906,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.1.2";
+    VERSION = "2.1.3";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -3729,7 +3730,7 @@ var extend = function(child, parent) { for (var key in parent) { if (hasProp.cal
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.1.2"
+    VERSION: "2.1.3"
   };
   return cloudinary;
 });
