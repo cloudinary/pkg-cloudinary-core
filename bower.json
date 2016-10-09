@@ -55,6 +55,7 @@
     "bower_components",
     "samples/",
     "test",
-    "tests"
+    "tests",
+    "docs/"
   ]
 }
