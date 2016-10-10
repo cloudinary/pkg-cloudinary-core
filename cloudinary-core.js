@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.1.4
+ * Cloudinary's JavaScript library - Version 2.1.5
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -2292,9 +2292,7 @@ var slice = [].slice,
       return this.param(value, "dpr", "dpr", (function(_this) {
         return function(dpr) {
           dpr = dpr.toString();
-          if ((dpr === "auto") && _this.getValue("client_hints") !== true) {
-            return "1.0";
-          } else if (dpr != null ? dpr.match(/^\d+$/) : void 0) {
+          if (dpr != null ? dpr.match(/^\d+$/) : void 0) {
             return dpr + ".0";
           } else {
             return dpr;
@@ -2979,7 +2977,7 @@ var slice = [].slice,
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.1.4";
+    VERSION = "2.1.5";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -3443,7 +3441,14 @@ var slice = [].slice,
 
 
     /**
+    * Initialize the responsive behaviour.<br>
+    * Calls {@link Cloudinary#cloudinary_update} to modify image tags.
      * @function Cloudinary#responsive
+    * @param {Object} options
+    * @param {String} [options.responsive_class='cld-responsive'] - provide an alternative class used to locate img tags
+    * @param {number} [options.responsive_debounce=100] - the debounce interval in milliseconds.
+    * @param {boolean} [bootstrap=true] if true processes the img tags by calling cloudinary_update. When false the tags will be processed only after a resize event.
+    * @see {@link Cloudinary#cloudinary_update} for additional configuration parameters
      */
 
     Cloudinary.prototype.responsive = function(options, bootstrap) {
@@ -3619,6 +3624,8 @@ var slice = [].slice,
 
     /**
     * Finds all `img` tags under each node and sets it up to provide the image through Cloudinary
+    * @param {Element[]} nodes the parent nodes to search for img under
+    * @param {Object} [options={}] options and transformations params
     * @function Cloudinary#processImageTags
      */
 
@@ -3626,6 +3633,9 @@ var slice = [].slice,
       var images, imgOptions, node, publicId, url;
       if (options == null) {
         options = {};
+      }
+      if (Util.isEmpty(nodes)) {
+        return this;
       }
       options = Util.defaults({}, options, this.config());
       images = (function() {
@@ -3715,8 +3725,8 @@ var slice = [].slice,
       }
       client_hints = (ref = (ref1 = options.client_hints) != null ? ref1 : this.config('client_hints')) != null ? ref : false;
       client_hints = client_hints || (typeof document !== "undefined" && document !== null ? document.querySelector('meta[http-equiv="Accept-CH"]') : void 0);
-      if (client_hints) {
-        return;
+      if (client_hints || elements === null) {
+        return this;
       }
       responsive = (ref2 = (ref3 = options.responsive) != null ? ref3 : this.config('responsive')) != null ? ref2 : false;
       elements = (function() {
@@ -3803,7 +3813,7 @@ var slice = [].slice,
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.1.4"
+    VERSION: "2.1.5"
   };
   return cloudinary;
 });
