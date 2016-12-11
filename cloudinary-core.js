@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.1.7
+ * Cloudinary's JavaScript library - Version 2.1.8
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -1580,22 +1580,38 @@ var slice = [].slice,
      */
 
     Configuration.prototype.fromEnvironment = function() {
-      var cloudinary_url, k, ref1, ref2, uri, v;
+      var cloudinary_url, j, k, len, query, ref1, ref2, ref3, uri, uriRegex, v, value;
       cloudinary_url = typeof process !== "undefined" && process !== null ? (ref1 = process.env) != null ? ref1.CLOUDINARY_URL : void 0 : void 0;
       if (cloudinary_url != null) {
-        uri = require('url').parse(cloudinary_url, true);
-        this.configuration = {
-          cloud_name: uri.host,
-          api_key: uri.auth && uri.auth.split(":")[0],
-          api_secret: uri.auth && uri.auth.split(":")[1],
-          private_cdn: uri.pathname != null,
-          secure_distribution: uri.pathname && uri.pathname.substring(1)
-        };
-        if (uri.query != null) {
-          ref2 = uri.query;
-          for (k in ref2) {
-            v = ref2[k];
-            this.configuration[k] = v;
+        uriRegex = /cloudinary:\/\/(?:(\w+)(?:\:(\w+))?@)?([\w\.-]+)(?:\/([^?]*))?(?:\?(.+))?/;
+        uri = uriRegex.exec(cloudinary_url);
+        if (uri) {
+          if (uri[3] != null) {
+            this.configuration['cloud_name'] = uri[3];
+          }
+          if (uri[1] != null) {
+            this.configuration['api_key'] = uri[1];
+          }
+          if (uri[2] != null) {
+            this.configuration['api_secret'] = uri[2];
+          }
+          if (uri[4] != null) {
+            this.configuration['private_cdn'] = uri[4] != null;
+          }
+          if (uri[4] != null) {
+            this.configuration['secure_distribution'] = uri[4];
+          }
+          query = uri[5];
+          if (query != null) {
+            ref2 = query.split('&');
+            for (j = 0, len = ref2.length; j < len; j++) {
+              value = ref2[j];
+              ref3 = value.split('='), k = ref3[0], v = ref3[1];
+              if (v == null) {
+                v = true;
+              }
+              this.configuration[k] = v;
+            }
           }
         }
       }
@@ -3008,7 +3024,7 @@ var slice = [].slice,
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.1.7";
+    VERSION = "2.1.8";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -3848,7 +3864,7 @@ var slice = [].slice,
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.1.7"
+    VERSION: "2.1.8"
   };
   return cloudinary;
 });
