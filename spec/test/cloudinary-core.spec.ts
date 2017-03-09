@@ -152,17 +152,6 @@ describe('Cloudinary', () => {
             const url = cld.url('sample', transformation);
             expect(url).toEqual('http://res.cloudinary.com/demo/image/upload/if_w_gt_1000_and_ar_lt_3:4,c_scale,w_1000/if_else,c_scale,w_500/sample');
         });
-        /*
-   * var tr = cloudinary.Transformation.new()
-   *    .if().width( ">", 1000).and().aspectRatio("<", "3:4").then()
-   *      .width(1000)
-   *      .crop("scale")
-   *    .else()
-   *      .width(500)
-   *      .crop("scale")
-   *
-
-*/
     });
 
     describe('Social', () => {
