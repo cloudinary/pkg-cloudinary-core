@@ -1,4 +1,4 @@
-import { Cloudinary, ConfigurationOptions, VideoTagInterface } from '../../cloudinary-core';
+import { Cloudinary, ConfigurationOptions, Transformation, ImageTag, VideoTag } from '../../cloudinary-core';
 import 'jasmine';
 import { jsdom } from 'jsdom';
 
@@ -87,7 +87,7 @@ describe('Cloudinary', () => {
         });
         it('creates a video tag', () => {
             spyOn(document, 'createElement').and.callThrough();
-            const video: VideoTagInterface = cld.videoTag(publicId);
+            const video: VideoTag = cld.videoTag(publicId);
             expect(video.getOption('source_types')).toEqual(['webm', 'mp4', 'ogv']);
         });
     });
@@ -99,6 +99,28 @@ describe('Cloudinary', () => {
                 fetchFormat: 'auto',
                 opacity: 30
             })).toEqual('bo_4px_solid_black,f_auto,o_30');
+        });
+
+        it('creates transforamtions thru methods', () => {
+            const transformation: Transformation = cld.transformation();
+            transformation.angle(20).crop('scale').width('auto');
+            expect(cld.url('sample', transformation)).toEqual('http://res.cloudinary.com/demo/image/upload/a_20,c_scale,w_auto/sample');
+        });
+
+        it('creates transforamtions thru methods objects', () => {
+            const transformation: Transformation = cld.transformation({
+                angle: 20,
+                crop: 'scale',
+                width: 'auto'
+            });
+            expect(cld.url('sample', transformation)).toEqual('http://res.cloudinary.com/demo/image/upload/a_20,c_scale,w_auto/sample');
+        });
+
+        it('uses transformation objects to create images', () => {
+            const transformation: Transformation = cld.transformation();
+            const imageTag: ImageTag = cld.imageTag('sample');
+            imageTag.transformation().angle(20).crop('scale').width('auto');
+            expect(imageTag.toHtml()).toEqual('<img src="http://res.cloudinary.com/demo/image/upload/a_20,c_scale,w_auto/sample">');
         });
     });
 
