@@ -31,3 +31,6 @@ bower_components
 
 ## Directory-based project format:
 .idea/
+
+# Typescript compilation output
+spec/test/*.js
