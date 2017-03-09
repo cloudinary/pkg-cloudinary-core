@@ -122,16 +122,57 @@ describe('Cloudinary', () => {
             imageTag.transformation().angle(20).crop('scale').width('auto');
             expect(imageTag.toHtml()).toEqual('<img src="http://res.cloudinary.com/demo/image/upload/a_20,c_scale,w_auto/sample">');
         });
+
+        it('chains transformation', () => {
+            const transformation: Transformation = cld.transformation();
+            transformation.angle(20).crop('scale').width('auto').chain().effect('sepia');
+            expect(cld.url('sample', transformation)).toEqual('http://res.cloudinary.com/demo/image/upload/a_20,c_scale,w_auto/e_sepia/sample');
+        });
+
+        it('should serialize to "if_end"', () => {
+            const url = cld.url('sample', cld.transformation().if().width('gt', 100).and().width('lt', 200).then().width(50).crop('scale').endIf());
+            expect(url).toEqual('http://res.cloudinary.com/demo/image/upload/if_w_gt_100_and_w_lt_200/c_scale,w_50/if_end/sample');
+
+        });
+        it('forces the if clause to be chained', () => {
+            const url = cld.url('sample', cld.transformation().if().width("gt", 100).and().width("lt", 200).then().width(50).crop("scale").endIf());
+            expect(url).toEqual("http://res.cloudinary.com/demo/image/upload/if_w_gt_100_and_w_lt_200/c_scale,w_50/if_end/sample");
+        });
+        it('forces the if_else clause to be chained', () => {
+            const url = cld.url('sample', cld.transformation().if().width("gt", 100).and().width("lt", 200).then().width(50).crop("scale").else().width(100).crop("crop").endIf());
+            expect(url).toEqual('http://res.cloudinary.com/demo/image/upload/if_w_gt_100_and_w_lt_200/c_scale,w_50/if_else/c_crop,w_100/if_end/sample');
+        });
+        it('accepts if conditions as a string', () => {
+            const transformation = cld.transformation().if("w > 1000 and aspectRatio < 3:4")
+                .width(1000)
+                .crop("scale")
+                .else()
+                .width(500)
+                .crop("scale");
+            const url = cld.url('sample', transformation);
+            expect(url).toEqual('http://res.cloudinary.com/demo/image/upload/if_w_gt_1000_and_ar_lt_3:4,c_scale,w_1000/if_else,c_scale,w_500/sample');
+        });
+        /*
+   * var tr = cloudinary.Transformation.new()
+   *    .if().width( ">", 1000).and().aspectRatio("<", "3:4").then()
+   *      .width(1000)
+   *      .crop("scale")
+   *    .else()
+   *      .width(500)
+   *      .crop("scale")
+   *
+
+*/
     });
 
     describe('Social', () => {
         it('fetches Facebook profile images', () => {
-            const image: HTMLImageElement = cld.facebook_profile_image('officialchucknorrispage', 
-            {
-                secure: true,
-                responsive: true,
-                effect: 'art:hokusai'
-            });
+            const image: HTMLImageElement = cld.facebook_profile_image('officialchucknorrispage',
+                {
+                    secure: true,
+                    responsive: true,
+                    effect: 'art:hokusai'
+                });
             const expectedImageUrl = 'https://res.cloudinary.com/demo/image/facebook/e_art:hokusai/officialchucknorrispage';
             expect(image.src).toEqual(expectedImageUrl);
             expect(image.getAttribute('data-src-cache')).toEqual(expectedImageUrl);

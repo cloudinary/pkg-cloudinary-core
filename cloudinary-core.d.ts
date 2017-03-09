@@ -139,6 +139,11 @@ export interface Transformation {
      */
     resetTransformations(): Transformation;
 
+    "if"(): Condition; // Create a condition
+    "if"(condition?: string): Transformation; // Create a condition
+    "else"(): Transformation; // Separator for setting the desired transformation for an "if" branch in case of falsy condition
+    endIf(): Transformation; // End condition
+
     /**
      * Transformation methods
      */
@@ -161,9 +166,6 @@ export interface Transformation {
     height(value: number): Transformation; // Number of pixels or height %
     htmlHeight(value: string): Transformation;
     htmlWidth(value: string): Transformation;
-    if(value: string): Transformation; // Apply a transformation only if a specified condition is met (see the conditional transformations documentation).
-    else(value: string): Transformation;
-    endIf(value: string): Transformation;
     opacity(value: number): Transformation; // percent, 0-100
     overlay(value: string): Transformation; // Identifier, e.g. "text:Arial_50:Smile!", or public id of a different resource
     page(value: number): Transformation; // Given a multi-page file (PDF, animated GIF, TIFF), generate an image of a single page using the given index.
@@ -179,6 +181,48 @@ export interface Transformation {
     y(value: number): Transformation; // pixels or percent 
     zoom(value: number): Transformation; // percent
     toHtml(): string; // Returns the string representation of this transformation
+}
+
+interface Condition {
+    "and"(): Condition; // Add terms to the condition
+    "or"(): Condition; // Add terms to the condition
+    "then"(): Transformation; // Separator for setting the desired transformation for an "if" branch in case of truthy condition
+
+    /**
+     * @function Condition#height
+     * @param {string} operator the comparison operator (e.g. "<", "lt")
+     * @param {string|number} value the right hand side value
+     * @return {Condition} this condition
+     */
+    height(operator: string, value: string | number): Condition;
+    /**
+     * @function Condition#width
+     * @param {string} operator the comparison operator (e.g. "<", "lt")
+     * @param {string|number} value the right hand side value
+     * @return {Condition} this condition
+     */
+    width(operator: string, value: string | number): Condition;
+    /**
+     * @function Condition#aspectRatio
+     * @param {string} operator the comparison operator (e.g. "<", "lt")
+     * @param {string|number} value the right hand side value
+     * @return {Condition} this condition
+     */
+    aspectRatio(operator: string, value: string | number): Condition;
+    /**
+     * @function Condition#pageCount
+     * @param {string} operator the comparison operator (e.g. "<", "lt")
+     * @param {string|number} value the right hand side value
+     * @return {Condition} this condition
+     */
+    pageCount(operator: string, value: string | number): Condition;
+    /**
+     * @function Condition#faceCount
+     * @param {string} operator the comparison operator (e.g. "<", "lt")
+     * @param {string|number} value the right hand side value
+     * @return {Condition} this condition
+     */
+    faceCount(operator: string, value: string | number): Condition;
 }
 
 export interface TransformationOptions {
@@ -237,8 +281,7 @@ interface VideoTransformationOptions extends TransformationOptions {
     startOffset?: number | string; // Float or string
     streamingProfile?: StreamingProfiles
     videoCodec?: "auto" | string; // Select the video codec and control the video content of the profile used. Can be provided in the form <codec>[:<profile>:[<level>]] to specify specific values to apply for video codec, profile and level, e.g. "h264:baseline:3.1"
-    videoSampling?: number | string; // Integer - The total number of frames to sample from the original video. The frames are spread out over the length of the video, e.g. 20 takes one frame every 5%
-    // String - The number of seconds between each frame to sample from the original video. e.g. 2.3s takes one frame every 2.3 seconds.
+    videoSampling?: number | string; // Integer - The total number of frames to sample from the original video. The frames are spread out over the length of the video, e.g. 20 takes one frame every 5% -- OR -- String - The number of seconds between each frame to sample from the original video. e.g. 2.3s takes one frame every 2.3 seconds.
 }
 
 /**
@@ -678,7 +721,7 @@ export class Cloudinary {
      * @param {Object} options
      * @return {Transformation}
      */
-    transformation(options?: Transformation | TransformationOptions): any;
+    transformation(options?: Transformation | TransformationOptions): Transformation;
 }
 
 export const VERSION: string;
