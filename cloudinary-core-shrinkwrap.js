@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.2.1
+ * Cloudinary's JavaScript library - Version 2.3.0
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -5503,7 +5503,7 @@ var slice = [].slice,
        * @return {Object} Returns a plain object representing this transformation
        */
       this.toOptions || (this.toOptions = function(withChain) {
-        var key, list, opt, ref, tr, value;
+        var key, list, opt, ref, ref1, tr, value;
         if (withChain == null) {
           withChain = true;
         }
@@ -5531,9 +5531,15 @@ var slice = [].slice,
             return results;
           }).call(this);
           list.push(opt);
-          opt = {
-            transformation: list
-          };
+          opt = {};
+          ref1 = this.otherOptions;
+          for (key in ref1) {
+            value = ref1[key];
+            if (value !== void 0) {
+              opt[key] = value;
+            }
+          }
+          opt.transformation = list;
         }
         return opt;
       });
@@ -5779,6 +5785,10 @@ var slice = [].slice,
             return new value.constructor(value.toOptions());
           }
         });
+        if (options["if"]) {
+          this.set("if", options["if"]);
+          delete options["if"];
+        }
         for (key in options) {
           opt = options[key];
           if (key.match(VAR_NAME_RE)) {
@@ -6852,7 +6862,7 @@ var slice = [].slice,
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.2.1";
+    VERSION = "2.3.0";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -7538,7 +7548,8 @@ var slice = [].slice,
           imgOptions = new Transformation(imgOptions).toHtmlAttributes();
           Util.setData(node, 'src-cache', url);
           node.setAttribute('width', imgOptions.width);
-          results.push(node.setAttribute('height', imgOptions.height));
+          node.setAttribute('height', imgOptions.height);
+          results.push(node);
         }
         return results;
       }).call(this);
@@ -7692,7 +7703,7 @@ var slice = [].slice,
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.2.1"
+    VERSION: "2.3.0"
   };
   return cloudinary;
 });
