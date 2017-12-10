@@ -1,6 +1,6 @@
 
 /**
- * Cloudinary's JavaScript library - Version 2.3.0
+ * Cloudinary's JavaScript library - Version 2.4.0
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -30,7 +30,13 @@ var slice = [].slice,
   /*
    * Includes common utility methods and shims
    */
-  var ArrayParam, BaseUtil, ClientHintsMetaTag, Cloudinary, Condition, Configuration, Expression, ExpressionParam, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, camelCase, cloudinary, contains, convertKeys, crc32, cssExpand, cssValue, curCSS, defaults, domStyle, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, isNumberLike, m, parameters, pnum, reWords, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, smartEscape, snakeCase, utf8_encode, width, withCamelCaseKeys, withSnakeCaseKeys, without;
+
+  /**
+   * Return true if all items in list are strings
+   * @function Util.allString
+   * @param {Array} list - an array of items
+   */
+  var ArrayParam, BaseUtil, ClientHintsMetaTag, Cloudinary, Condition, Configuration, Expression, ExpressionParam, FetchLayer, HtmlTag, ImageTag, Layer, LayerParam, Param, RangeParam, RawParam, SubtitlesLayer, TextLayer, Transformation, TransformationBase, TransformationParam, Util, VideoTag, addClass, allStrings, augmentWidthOrHeight, base64Encode, base64EncodeURL, camelCase, cloudinary, contains, convertKeys, crc32, cssExpand, cssValue, curCSS, defaults, domStyle, funcTag, getAttribute, getData, getStyles, getWidthOrHeight, hasClass, isFunction, isNumberLike, isObject, m, objToString, objectProto, parameters, pnum, reWords, removeAttribute, rnumnonpx, setAttribute, setAttributes, setData, smartEscape, snakeCase, utf8_encode, width, withCamelCaseKeys, withSnakeCaseKeys, without;
   allStrings = function(list) {
     var item, j, len;
     for (j = 0, len = list.length; j < len; j++) {
@@ -41,6 +47,14 @@ var slice = [].slice,
     }
     return true;
   };
+
+  /**
+  * Creates a new array without the given item.
+  * @function Util.without
+  * @param {Array} array - original array
+  * @param {*} item - the item to exclude from the new array
+  * @return {Array} a new array made of the original array's items except for `item`
+   */
   without = function(array, item) {
     var i, length, newArray;
     newArray = [];
@@ -53,9 +67,29 @@ var slice = [].slice,
     }
     return newArray;
   };
+
+  /**
+  * Return true is value is a number or a string representation of a number.
+  * @function Util.isNumberLike
+  * @param {*} value
+  * @returns {boolean} true if value is a number
+  * @example
+  *    Util.isNumber(0) // true
+  *    Util.isNumber("1.3") // true
+  *    Util.isNumber("") // false
+  *    Util.isNumber(undefined) // false
+   */
   isNumberLike = function(value) {
     return (value != null) && !isNaN(parseFloat(value));
   };
+
+  /**
+   * Escape all characters matching unsafe in the given string
+   * @function Util.smartEscape
+   * @param {string} string - source string to escape
+   * @param {RegExp} unsafe - characters that must be escaped
+   * @return {string} escaped string
+   */
   smartEscape = function(string, unsafe) {
     if (unsafe == null) {
       unsafe = /([^a-zA-Z0-9_.\-\/:]+)/g;
@@ -66,6 +100,15 @@ var slice = [].slice,
       }).join("");
     });
   };
+
+  /**
+   * Assign values from sources if they are not defined in the destination.
+   * Once a value is set it does not change
+   * @function Util.defaults
+   * @param {Object} destination - the object to assign defaults to
+   * @param {...Object} source - the source object(s) to assign defaults from
+   * @return {Object} destination after it was modified
+   */
   defaults = function() {
     var destination, sources;
     destination = arguments[0], sources = 2 <= arguments.length ? slice.call(arguments, 1) : [];
@@ -81,6 +124,59 @@ var slice = [].slice,
     }, destination);
   };
 
+  /*********** lodash functions */
+  objectProto = Object.prototype;
+
+  /**
+   * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+  objToString = objectProto.toString;
+
+  /**
+   * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+   * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+   *
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+   * @example
+   *
+  #isObject({});
+   * // => true
+   *
+  #isObject([1, 2, 3]);
+   * // => true
+   *
+  #isObject(1);
+   * // => false
+   */
+  isObject = function(value) {
+    var type;
+    type = typeof value;
+    return !!value && (type === 'object' || type === 'function');
+  };
+  funcTag = '[object Function]';
+
+  /**
+  * Checks if `value` is classified as a `Function` object.
+  * @function Util.isFunction
+  * @param {*} value The value to check.
+  * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+  * @example
+  *
+  * function Foo(){};  
+  * isFunction(Foo);
+  * // => true
+  *
+  * isFunction(/abc/);
+  * // => false
+   */
+  isFunction = function(value) {
+    return isObject(value) && objToString.call(value) === funcTag;
+  };
+
+  /*********** lodash functions */
+
   /** Used to match words to create compound words. */
   reWords = (function() {
     var lower, upper;
@@ -88,6 +184,13 @@ var slice = [].slice,
     lower = '[a-z]+';
     return RegExp(upper + '+(?=' + upper + lower + ')|' + upper + '?' + lower + '|' + upper + '+|[0-9]+', 'g');
   })();
+
+  /**
+  * Convert string to camelCase
+  * @function Util.camelCase
+  * @param {string} string - the string to convert
+  * @return {string} in camelCase format
+   */
   camelCase = function(source) {
     var i, word, words;
     words = source.match(reWords);
@@ -107,6 +210,13 @@ var slice = [].slice,
     })();
     return words.join('');
   };
+
+  /**
+   * Convert string to snake_case
+   * @function Util.snakeCase
+   * @param {string} string - the string to convert
+   * @return {string} in snake_case format
+   */
   snakeCase = function(source) {
     var i, word, words;
     words = source.match(reWords);
@@ -136,64 +246,65 @@ var slice = [].slice,
     }
     return result;
   };
+
+  /**
+   * Create a copy of the source object with all keys in camelCase
+   * @function Util.withCamelCaseKeys
+   * @param {Object} value - the object to copy
+   * @return {Object} a new object
+   */
   withCamelCaseKeys = function(source) {
     return convertKeys(source, Util.camelCase);
   };
+
+  /**
+   * Create a copy of the source object with all keys in snake_case
+   * @function Util.withSnakeCaseKeys
+   * @param {Object} value - the object to copy
+   * @return {Object} a new object
+   */
   withSnakeCaseKeys = function(source) {
     return convertKeys(source, Util.snakeCase);
   };
+  base64Encode = typeof btoa !== 'undefined' && isFunction(btoa) ? btoa : typeof Buffer !== 'undefined' && isFunction(Buffer) ? function(input) {
+    if (!(input instanceof Buffer)) {
+      input = new Buffer.from(String(input), 'binary');
+    }
+    return input.toString('base64');
+  } : function(input) {
+    throw new Error("No base64 encoding function found");
+  };
+
+  /**
+  * Returns the Base64-decoded version of url.<br>
+  * This method delegates to `btoa` if present. Otherwise it tries `Buffer`.
+  * @function Util.base64EncodeURL
+  * @param {string} url - the url to encode. the value is URIdecoded and then re-encoded before converting to base64 representation
+  * @return {string} the base64 representation of the URL
+   */
+  base64EncodeURL = function(input) {
+    var error1, ignore;
+    try {
+      input = decodeURI(input);
+    } catch (error1) {
+      ignore = error1;
+    }
+    input = encodeURI(input);
+    return base64Encode(input);
+  };
   BaseUtil = {
-
-    /**
-     * Return true if all items in list are strings
-     * @param {Array} list - an array of items
-     */
     allStrings: allStrings,
-
-    /**
-    * Convert string to camelCase
-    * @param {string} string - the string to convert
-    * @return {string} in camelCase format
-     */
     camelCase: camelCase,
     convertKeys: convertKeys,
-
-    /**
-     * Assign values from sources if they are not defined in the destination.
-     * Once a value is set it does not change
-     * @param {Object} destination - the object to assign defaults to
-     * @param {...Object} source - the source object(s) to assign defaults from
-     * @return {Object} destination after it was modified
-     */
     defaults: defaults,
-
-    /**
-     * Convert string to snake_case
-     * @param {string} string - the string to convert
-     * @return {string} in snake_case format
-     */
     snakeCase: snakeCase,
-
-    /**
-    * Creates a new array without the given item.
-    * @param {Array} array - original array
-    * @param {*} item - the item to exclude from the new array
-    * @return {Array} a new array made of the original array's items except for `item`
-     */
     without: without,
-
-    /**
-    * Return true is value is a number or a string representation of a number.
-    * @example
-    *    Util.isNumber(0) // true
-    *    Util.isNumber("1.3") // true
-    *    Util.isNumber("") // false
-    *    Util.isNumber(undefined) // false
-     */
+    isFunction: isFunction,
     isNumberLike: isNumberLike,
     smartEscape: smartEscape,
     withCamelCaseKeys: withCamelCaseKeys,
-    withSnakeCaseKeys: withSnakeCaseKeys
+    withSnakeCaseKeys: withSnakeCaseKeys,
+    base64EncodeURL: base64EncodeURL
   };
 
   /*
@@ -207,7 +318,7 @@ var slice = [].slice,
    * @param {Element} element - the element to get the data from
    * @param {string} name - the name of the data item
    * @returns the value associated with the `name`
-   *
+   * @function Util.getData
    */
   getData = function(element, name) {
     var ref;
@@ -229,6 +340,7 @@ var slice = [].slice,
    * Set data in the DOM element.
    *
    * This method will use jQuery's `data()` method if it is available, otherwise it will set the `data-` attribute
+   * @function Util.setData
    * @param {Element} element - the element to set the data in
    * @param {string} name - the name of the data item
    * @param {*} value - the value to be set
@@ -253,7 +365,7 @@ var slice = [].slice,
   /**
    * Get attribute from the DOM element.
    *
-   * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
+   * @function Util.getAttribute
    * @param {Element} element - the element to set the attribute for
    * @param {string} name - the name of the attribute
    * @returns {*} the value of the attribute
@@ -275,11 +387,10 @@ var slice = [].slice,
   /**
    * Set attribute in the DOM element.
    *
-   * This method will use jQuery's `attr()` method if it is available, otherwise it will set the attribute directly
+   * @function Util.setAttribute
    * @param {Element} element - the element to set the attribute for
    * @param {string} name - the name of the attribute
    * @param {*} value - the value to be set
-   *
    */
   setAttribute = function(element, name, value) {
     switch (false) {
@@ -293,6 +404,14 @@ var slice = [].slice,
         return element.setAttr(name, value);
     }
   };
+
+  /**
+   * Remove an attribute in the DOM element.
+   *
+   * @function Util.removeAttribute
+   * @param {Element} element - the element to set the attribute for
+   * @param {string} name - the name of the attribute
+   */
   removeAttribute = function(element, name) {
     switch (false) {
       case !(element == null):
@@ -303,6 +422,13 @@ var slice = [].slice,
         return setAttribute(element, void 0);
     }
   };
+
+  /**
+    * Set a group of attributes to the element
+    * @function Util.setAttributes
+    * @param {Element} element - the element to set the attributes for
+    * @param {Object} attributes - a hash of attribute names and values
+   */
   setAttributes = function(element, attributes) {
     var name, results, value;
     results = [];
@@ -316,11 +442,26 @@ var slice = [].slice,
     }
     return results;
   };
+
+  /**
+    * Checks if element has a css class
+    * @function Util.hasClass
+    * @param {Element} element - the element to check
+    * @param {string} name - the class name
+    @returns {boolean} true if the element has the class
+   */
   hasClass = function(element, name) {
     if (_.isElement(element)) {
       return element.className.match(new RegExp("\\b" + name + "\\b"));
     }
   };
+
+  /**
+    * Add class to the element
+    * @function Util.addClass
+    * @param {Element} element - the element
+    * @param {string} name - the class name to add
+   */
   addClass = function(element, name) {
     if (!element.className.match(new RegExp("\\b" + name + "\\b"))) {
       return element.className = _.trim(element.className + " " + name);
@@ -446,16 +587,6 @@ var slice = [].slice,
   Util = _.assign(BaseUtil, {
     hasClass: hasClass,
     addClass: addClass,
-
-    /**
-     * Get attribute from the DOM element.
-     *
-     * This method will use jQuery's `attr()` method if it is available, otherwise it will get the attribute directly
-     * @param {Element} element - the element to set the attribute for
-     * @param {string} name - the name of the attribute
-     * @returns {*} the value of the attribute
-     *
-     */
     getAttribute: getAttribute,
     setAttribute: setAttribute,
     removeAttribute: removeAttribute,
@@ -463,19 +594,40 @@ var slice = [].slice,
     getData: getData,
     setData: setData,
     width: width,
+
+    /**
+     * Returns true if item is a string
+     * @function Util.isString
+     * @param item
+     * @returns {boolean} true if item is a string
+     */
     isString: _.isString,
     isArray: _.isArray,
+
+    /**
+     * Returns true if item is empty:
+     * <ul>
+     *   <li>item is null or undefined</li>
+     *   <li>item is an array or string of length 0</li>
+     *   <li>item is an object with no keys</li>
+     * </ul>
+     * @function Util.isEmpty
+     * @param item
+     * @returns {boolean} true if item is empty
+     */
     isEmpty: _.isEmpty,
 
     /**
      * Assign source properties to destination.
      * If the property is an object it is assigned as a whole, overriding the destination object.
+     * @function Util.assign
      * @param {Object} destination - the object to assign to
      */
     assign: _.assign,
 
     /**
      * Recursively assign source properties to destination
+     * @function Util.merge
      * @param {Object} destination - the object to assign to
      * @param {...Object} [sources] The source objects.
      */
@@ -483,6 +635,7 @@ var slice = [].slice,
 
     /**
      * Create a new copy of the given object, including all internal objects.
+     * @function Util.cloneDeep
      * @param {Object} value - the object to clone
      * @return {Object} a new deep copy of the object
      */
@@ -490,6 +643,7 @@ var slice = [].slice,
 
     /**
      * Creates a new array from the parameter with "falsey" values removed
+     * @function Util.compact
      * @param {Array} array - the array to remove values from
      * @return {Array} a new array without falsey values
      */
@@ -497,6 +651,7 @@ var slice = [].slice,
 
     /**
      * Check if a given item is included in the given array
+     * @function Util.contains
      * @param {Array} array - the array to search in
      * @param {*} item - the item to search for
      * @return {boolean} true if the item is included in the array
@@ -505,6 +660,7 @@ var slice = [].slice,
 
     /**
      * Returns values in the given array that are not included in the other array
+     * @function Util.difference
      * @param {Array} arr - the array to select from
      * @param {Array} values - values to filter from arr
      * @return {Array} the filtered values
@@ -512,14 +668,8 @@ var slice = [].slice,
     difference: _.difference,
 
     /**
-     * Returns true if argument is a function.
-     * @param {*} value - the value to check
-     * @return {boolean} true if the value is a function
-     */
-    isFunction: _.isFunction,
-
-    /**
      * Returns a list of all the function names in obj
+     * @function Util.functions
      * @param {Object} object - the object to inspect
      * @return {Array} a list of functions of object
      */
@@ -527,6 +677,7 @@ var slice = [].slice,
 
     /**
      * Returns the provided value. This functions is used as a default predicate function.
+     * @function Util.identity
      * @param {*} value
      * @return {*} the provided value
      */
@@ -535,6 +686,7 @@ var slice = [].slice,
 
     /**
      * Remove leading or trailing spaces from text
+     * @function Util.trim
      * @param {string} text
      * @return {string} the `text` without leading or trailing spaces
      */
@@ -700,6 +852,44 @@ var slice = [].slice,
     return Layer;
 
   })();
+  FetchLayer = (function(superClass) {
+    extend(FetchLayer, superClass);
+
+
+    /**
+     * @constructor FetchLayer
+     * @param {Object|string} options - layer parameters or a url
+     * @param {string} options.url the url of the image to fetch
+     */
+
+    function FetchLayer(options) {
+      FetchLayer.__super__.constructor.call(this, options);
+      if (Util.isString(options)) {
+        this.options.url = options;
+      } else if (options != null ? options.url : void 0) {
+        this.options.url = options.url;
+      }
+    }
+
+    FetchLayer.prototype.url = function(url) {
+      this.options.url = url;
+      return this;
+    };
+
+
+    /**
+     * generate the string representation of the layer
+     * @function FetchLayer#toString
+     * @return {String}
+     */
+
+    FetchLayer.prototype.toString = function() {
+      return "fetch:" + (cloudinary.Util.base64EncodeURL(this.options.url));
+    };
+
+    return FetchLayer;
+
+  })(Layer);
   TextLayer = (function(superClass) {
     extend(TextLayer, superClass);
 
@@ -1229,13 +1419,18 @@ var slice = [].slice,
       var layerOptions, result;
       layerOptions = this.origValue;
       if (cloudinary.Util.isPlainObject(layerOptions)) {
-        if (layerOptions.resource_type === "text" || (layerOptions.text != null)) {
+        layerOptions = Util.withCamelCaseKeys(layerOptions);
+        if (layerOptions.resourceType === "text" || (layerOptions.text != null)) {
           result = new cloudinary.TextLayer(layerOptions).toString();
-        } else if (layerOptions.resource_type === "subtitles") {
+        } else if (layerOptions.resourceType === "subtitles") {
           result = new cloudinary.SubtitlesLayer(layerOptions).toString();
+        } else if (layerOptions.resourceType === "fetch" || (layerOptions.url != null)) {
+          result = new cloudinary.FetchLayer(layerOptions).toString();
         } else {
           result = new cloudinary.Layer(layerOptions).toString();
         }
+      } else if (/^fetch:.+/.test(layerOptions)) {
+        result = new FetchLayer(layerOptions.substr(6)).toString();
       } else {
         result = layerOptions;
       }
@@ -1878,7 +2073,7 @@ var slice = [].slice,
       var cloudinary_url, j, k, len, query, ref1, ref2, ref3, uri, uriRegex, v, value;
       cloudinary_url = typeof process !== "undefined" && process !== null ? (ref1 = process.env) != null ? ref1.CLOUDINARY_URL : void 0 : void 0;
       if (cloudinary_url != null) {
-        uriRegex = /cloudinary:\/\/(?:(\w+)(?:\:(\w+))?@)?([\w\.-]+)(?:\/([^?]*))?(?:\?(.+))?/;
+        uriRegex = /cloudinary:\/\/(?:(\w+)(?:\:([\w-]+))?@)?([\w\.-]+)(?:\/([^?]*))?(?:\?(.+))?/;
         uri = uriRegex.exec(cloudinary_url);
         if (uri) {
           if (uri[3] != null) {
@@ -3367,7 +3562,7 @@ var slice = [].slice,
   Cloudinary = (function() {
     var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
-    VERSION = "2.3.0";
+    VERSION = "2.4.0";
 
     CF_SHARED_CDN = "d3jpl91pxevbkh.cloudfront.net";
 
@@ -3506,6 +3701,9 @@ var slice = [].slice,
       if (urlSuffix != null) {
         if (resourceType === 'image' && type === 'upload') {
           resourceType = "images";
+          type = null;
+        } else if (resourceType === 'image' && type === 'private') {
+          resourceType = 'private_images';
           type = null;
         } else if (resourceType === 'raw' && type === 'upload') {
           resourceType = 'files';
@@ -4205,10 +4403,11 @@ var slice = [].slice,
     VideoTag: VideoTag,
     ClientHintsMetaTag: ClientHintsMetaTag,
     Layer: Layer,
+    FetchLayer: FetchLayer,
     TextLayer: TextLayer,
     SubtitlesLayer: SubtitlesLayer,
     Cloudinary: Cloudinary,
-    VERSION: "2.3.0"
+    VERSION: "2.4.0"
   };
   return cloudinary;
 });
