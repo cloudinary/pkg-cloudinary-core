@@ -26,10 +26,10 @@ var slice = [].slice,
     return results;
   }
 })(this, function() {
-  /**
+  /*
    * @license
    * Lodash (Custom Build) <https://lodash.com/>
-   * Build: 'lodash include="isFunction,isElement,trim,assign,isString,isArray,isEmpty,merge,cloneDeep,compact,includes,difference,functions,identity,isPlainObject" exports="none" iife="var lodash = _ = (function() {%output%; \nreturn lodash;\n}.call(this));" --output build/lodash-shrinkwrap.js --development'
+   * Build: 'lodash include="assign,cloneDeep,compact,difference,functions,identity,includes,isArray,isElement,isEmpty,isFunction,isPlainObject,isString,merge,trim" exports="none" iife="var lodash = _ = (function() {%output%; \nreturn lodash;\n}.call(this));" --output build/lodash-shrinkwrap.js --development'
    * Copyright JS Foundation and other contributors <https://js.foundation/>
    * Released under MIT license <https://lodash.com/license>
    * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -7403,7 +7403,7 @@ var slice = [].slice,
 
   })(HtmlTag);
   Cloudinary = (function() {
-    var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
+    var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SEO_TYPES, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
     VERSION = "2.4.0";
 
@@ -7421,6 +7421,14 @@ var slice = [].slice,
     };
 
     DEFAULT_VIDEO_SOURCE_TYPES = ['webm', 'mp4', 'ogv'];
+
+    SEO_TYPES = {
+      "image/upload": "images",
+      "image/private": "private_images",
+      "image/authenticated": "authenticated_images",
+      "raw/upload": "files",
+      "video/upload": "videos"
+    };
 
 
     /**
@@ -7529,7 +7537,13 @@ var slice = [].slice,
      */
 
     finalizeResourceType = function(resourceType, type, urlSuffix, useRootPath, shorten) {
-      var options;
+      var key, options;
+      if (resourceType == null) {
+        resourceType = "image";
+      }
+      if (type == null) {
+        type = "upload";
+      }
       if (Util.isPlainObject(resourceType)) {
         options = resourceType;
         resourceType = options.resource_type;
@@ -7542,17 +7556,17 @@ var slice = [].slice,
         type = 'upload';
       }
       if (urlSuffix != null) {
-        if (resourceType === 'image' && type === 'upload') {
-          resourceType = "images";
-          type = null;
-        } else if (resourceType === 'image' && type === 'private') {
-          resourceType = 'private_images';
-          type = null;
-        } else if (resourceType === 'raw' && type === 'upload') {
-          resourceType = 'files';
-          type = null;
-        } else {
-          throw new Error("URL Suffix only supported for image/upload and raw/upload");
+        resourceType = SEO_TYPES[resourceType + "/" + type];
+        type = null;
+        if (resourceType == null) {
+          throw new Error("URL Suffix only supported for " + (((function() {
+            var results;
+            results = [];
+            for (key in SEO_TYPES) {
+              results.push(key);
+            }
+            return results;
+          })()).join(', ')));
         }
       }
       if (useRootPath) {
@@ -7616,9 +7630,6 @@ var slice = [].slice,
       transformationString = transformation.serialize();
       if (!options.cloud_name) {
         throw 'Unknown cloud_name';
-      }
-      if (options.url_suffix && !options.private_cdn) {
-        throw 'URL Suffix only supported in private CDN';
       }
       if (publicId.search('/') >= 0 && !publicId.match(/^v[0-9]+/) && !publicId.match(/^https?:\//) && !((ref = options.version) != null ? ref.toString() : void 0)) {
         options.version = 1;

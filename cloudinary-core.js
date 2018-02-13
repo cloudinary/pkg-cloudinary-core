@@ -10,11 +10,30 @@ var slice = [].slice,
   hasProp = {}.hasOwnProperty;
 
 (function(root, factory) {
-  var name, ref, results, value;
+  var factoryWrapper, name, ref, results, value;
+  factoryWrapper = function(assign, cloneDeep, compact, difference, functions, identity, includes, isArray, isElement, isEmpty, isFunction, isPlainObject, isString, merge, trim) {
+    return factory({
+      assign: assign,
+      cloneDeep: cloneDeep,
+      compact: compact,
+      difference: difference,
+      functions: functions,
+      identity: identity,
+      includes: includes,
+      isArray: isArray,
+      isElement: isElement,
+      isEmpty: isEmpty,
+      isFunction: isFunction,
+      isPlainObject: isPlainObject,
+      isString: isString,
+      merge: merge,
+      trim: trim
+    });
+  };
   if ((typeof define === 'function') && define.amd) {
-    return define(['lodash'], factory);
+    return define(['lodash/assign', 'lodash/cloneDeep', 'lodash/compact', 'lodash/difference', 'lodash/functions', 'lodash/identity', 'lodash/includes', 'lodash/isArray', 'lodash/isElement', 'lodash/isEmpty', 'lodash/isFunction', 'lodash/isPlainObject', 'lodash/isString', 'lodash/merge', 'lodash/trim'], factoryWrapper);
   } else if (typeof exports === 'object') {
-    return module.exports = factory(require('lodash'));
+    return module.exports = factoryWrapper(require('lodash/assign'), require('lodash/cloneDeep'), require('lodash/compact'), require('lodash/difference'), require('lodash/functions'), require('lodash/identity'), require('lodash/includes'), require('lodash/isArray'), require('lodash/isElement'), require('lodash/isEmpty'), require('lodash/isFunction'), require('lodash/isPlainObject'), require('lodash/isString'), require('lodash/merge'), require('lodash/trim'));
   } else {
     root.cloudinary || (root.cloudinary = {});
     ref = factory(_);
@@ -3560,7 +3579,7 @@ var slice = [].slice,
 
   })(HtmlTag);
   Cloudinary = (function() {
-    var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
+    var AKAMAI_SHARED_CDN, CF_SHARED_CDN, DEFAULT_POSTER_OPTIONS, DEFAULT_VIDEO_SOURCE_TYPES, OLD_AKAMAI_SHARED_CDN, SEO_TYPES, SHARED_CDN, VERSION, absolutize, applyBreakpoints, cdnSubdomainNumber, closestAbove, cloudinaryUrlPrefix, defaultBreakpoints, finalizeResourceType, findContainerWidth, maxWidth, updateDpr;
 
     VERSION = "2.4.0";
 
@@ -3578,6 +3597,14 @@ var slice = [].slice,
     };
 
     DEFAULT_VIDEO_SOURCE_TYPES = ['webm', 'mp4', 'ogv'];
+
+    SEO_TYPES = {
+      "image/upload": "images",
+      "image/private": "private_images",
+      "image/authenticated": "authenticated_images",
+      "raw/upload": "files",
+      "video/upload": "videos"
+    };
 
 
     /**
@@ -3686,7 +3713,13 @@ var slice = [].slice,
      */
 
     finalizeResourceType = function(resourceType, type, urlSuffix, useRootPath, shorten) {
-      var options;
+      var key, options;
+      if (resourceType == null) {
+        resourceType = "image";
+      }
+      if (type == null) {
+        type = "upload";
+      }
       if (Util.isPlainObject(resourceType)) {
         options = resourceType;
         resourceType = options.resource_type;
@@ -3699,17 +3732,17 @@ var slice = [].slice,
         type = 'upload';
       }
       if (urlSuffix != null) {
-        if (resourceType === 'image' && type === 'upload') {
-          resourceType = "images";
-          type = null;
-        } else if (resourceType === 'image' && type === 'private') {
-          resourceType = 'private_images';
-          type = null;
-        } else if (resourceType === 'raw' && type === 'upload') {
-          resourceType = 'files';
-          type = null;
-        } else {
-          throw new Error("URL Suffix only supported for image/upload and raw/upload");
+        resourceType = SEO_TYPES[resourceType + "/" + type];
+        type = null;
+        if (resourceType == null) {
+          throw new Error("URL Suffix only supported for " + (((function() {
+            var results;
+            results = [];
+            for (key in SEO_TYPES) {
+              results.push(key);
+            }
+            return results;
+          })()).join(', ')));
         }
       }
       if (useRootPath) {
@@ -3773,9 +3806,6 @@ var slice = [].slice,
       transformationString = transformation.serialize();
       if (!options.cloud_name) {
         throw 'Unknown cloud_name';
-      }
-      if (options.url_suffix && !options.private_cdn) {
-        throw 'URL Suffix only supported in private CDN';
       }
       if (publicId.search('/') >= 0 && !publicId.match(/^v[0-9]+/) && !publicId.match(/^https?:\//) && !((ref = options.version) != null ? ref.toString() : void 0)) {
         options.version = 1;
