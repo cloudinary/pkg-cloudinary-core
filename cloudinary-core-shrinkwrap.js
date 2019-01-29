@@ -1,6 +1,6 @@
 /**
  * cloudinary-core-shrinkwrap.js
- * Cloudinary's JavaScript library - Version 2.6.0
+ * Cloudinary's JavaScript library - Version 2.6.1-rc1
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
@@ -7579,9 +7579,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cloudinary__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("./src/cloudinary.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cloudinary", function() { return _cloudinary__WEBPACK_IMPORTED_MODULE_15__["default"]; });
 
-  /**
-   * Creates the namespace for Cloudinary
-   */
+/**
+ * Creates the namespace for Cloudinary
+ */
 
 
 
@@ -7599,20 +7599,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* harmony default export */ __webpack_exports__["default"] = ({
+  ClientHintsMetaTag: _tags_clienthintsmetatag__WEBPACK_IMPORTED_MODULE_10__["default"],
+  Cloudinary: _cloudinary__WEBPACK_IMPORTED_MODULE_15__["default"],
+  Condition: _condition__WEBPACK_IMPORTED_MODULE_4__["default"],
+  Configuration: _configuration__WEBPACK_IMPORTED_MODULE_5__["default"],
+  crc32: _crc32__WEBPACK_IMPORTED_MODULE_1__["default"],
+  FetchLayer: _layer_fetchlayer__WEBPACK_IMPORTED_MODULE_12__["default"],
+  HtmlTag: _tags_htmltag__WEBPACK_IMPORTED_MODULE_6__["default"],
+  ImageTag: _tags_imagetag__WEBPACK_IMPORTED_MODULE_7__["default"],
+  Layer: _layer_layer__WEBPACK_IMPORTED_MODULE_11__["default"],
+  PictureTag: _tags_picturetag__WEBPACK_IMPORTED_MODULE_8__["default"],
+  SubtitlesLayer: _layer_subtitleslayer__WEBPACK_IMPORTED_MODULE_14__["default"],
+  TextLayer: _layer_textlayer__WEBPACK_IMPORTED_MODULE_13__["default"],
+  Transformation: _transformation__WEBPACK_IMPORTED_MODULE_3__["default"],
+  utf8_encode: _utf8_encode__WEBPACK_IMPORTED_MODULE_0__["default"],
+  Util: _util__WEBPACK_IMPORTED_MODULE_2__,
+  VideoTag: _tags_videotag__WEBPACK_IMPORTED_MODULE_9__["default"]
+});
 
 
 
@@ -8706,7 +8710,6 @@ var TransformationBase = class TransformationBase {
       return this;
     };
     /** @protected */
-    this.rawParam && console.log("rawParam: **********************************************");
     this.rawParam = function (value, name, abbr, defaultValue, process = _util__WEBPACK_IMPORTED_MODULE_3__["identity"]) {
       process = lastArgCallback(arguments);
       trans[name] = new _parameters__WEBPACK_IMPORTED_MODULE_4__["RawParam"](name, abbr, process).set(value);
