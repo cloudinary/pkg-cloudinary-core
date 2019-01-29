@@ -1,6 +1,6 @@
 /**
  * cloudinary-core.js
- * Cloudinary's JavaScript library - Version 2.6.1-rc1
+ * Cloudinary's JavaScript library - Version 2.6.1
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  *
