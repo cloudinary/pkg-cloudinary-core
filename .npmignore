@@ -33,3 +33,7 @@ bower_components
 .idea/
 samples/
 docs/
+
+*.tgz
+*.html
+
