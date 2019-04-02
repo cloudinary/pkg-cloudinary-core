@@ -28,14 +28,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ClientHintsMetaTag.html">ClientHintsMetaTag</a></li><li><a href="Cloudinary.html">Cloudinary</a></li><li><a href="Condition.html">Condition</a></li><li><a href="Configuration.html">Configuration</a></li><li><a href="Expression.html">Expression</a></li><li><a href="FetchLayer.html">FetchLayer</a></li><li><a href="HtmlTag.html">HtmlTag</a></li><li><a href="ImageTag.html">ImageTag</a></li><li><a href="Layer.html">Layer</a></li><li><a href="SubtitlesLayer.html">SubtitlesLayer</a></li><li><a href="TextLayer.html">TextLayer</a></li><li><a href="Transformation.html">Transformation</a></li><li><a href="TransformationBase.html">TransformationBase</a></li><li><a href="Util.html">Util</a></li><li><a href="VideoTag.html">VideoTag</a></li>
+					<li><a href="ClientHintsMetaTag.html">ClientHintsMetaTag</a></li><li><a href="Cloudinary.html">Cloudinary</a></li><li><a href="Condition.html">Condition</a></li><li><a href="Configuration.html">Configuration</a></li><li><a href="Expression.html">Expression</a></li><li><a href="FetchLayer.html">FetchLayer</a></li><li><a href="HtmlTag.html">HtmlTag</a></li><li><a href="ImageTag.html">ImageTag</a></li><li><a href="Layer.html">Layer</a></li><li><a href="module-utils-Util.html">utils~Util</a></li><li><a href="SourceTag.html">SourceTag</a></li><li><a href="SubtitlesLayer.html">SubtitlesLayer</a></li><li><a href="TextLayer.html">TextLayer</a></li><li><a href="Transformation.html">Transformation</a></li><li><a href="TransformationBase.html">TransformationBase</a></li><li><a href="VideoTag.html">VideoTag</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#slice">slice</a></li>
+					<li><a href="global.html#toAttribute">toAttribute</a></li><li><a href="global.html#value">value</a></li>
 				</ul>
 			</li>
 			
@@ -128,24 +128,107 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
             
 <hr>
-<dt class="name" id="slice">
-    <h4><span class="type-signature"></span>slice<span class="type-signature"></span></h4>
+<dt>
+    <h4 class="name" id="toAttribute">toAttribute(key, value)</h4>
 
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>Cloudinary's JavaScript library - Version 2.5.0
-Copyright Cloudinary
-see https://github.com/cloudinary/cloudinary_js</p>
+        <p>Represent the given key and value as an HTML attribute.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>attribute name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+|
+
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the value of the attribute. If the value is boolean <code>true</code>, return the key only.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -190,11 +273,153 @@ see https://github.com/cloudinary/cloudinary_js</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+<h5>Returns: 
+<span class="param-type">string</span>
+
+
+</h5>
+    
+            <div class="param-desc">
+    		<p>the attribute</p>
+	</div>
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="value">value()</h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Serialize the expression</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+<h5>Returns: 
+<span class="param-type">string</span>
+
+
+</h5>
+    
+            <div class="param-desc">
+    		<p>the expression as a string</p>
+	</div>
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         </dl>
-    
-
     
 
     
