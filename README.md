@@ -1,6 +1,12 @@
 [![Build Status](https://travis-ci.org/cloudinary/cloudinary_js.svg?branch=master)](https://travis-ci.org/cloudinary/cloudinary_js) [![npm](https://img.shields.io/npm/v/cloudinary-core.svg?maxAge=2592000)]() [![Bower](https://img.shields.io/bower/v/cloudinary-core.svg?maxAge=2592000)]() [![license](https://img.shields.io/github/license/cloudinary/pkg-cloudinary-core.svg?maxAge=2592000)]()
 
-:information_source: This was a distribution repository for `bower` and `npm`. The sources for this repository are maintained at the [cloudinary_js repository](https://github.com/cloudinary/cloudinary_js). Please submit issues and pull requests to that repository.## Additional resources
+:information_source: This was a distribution repository for cloudinary-core. The sources for this repository are maintained at the [cloudinary_js repository](https://github.com/cloudinary/cloudinary_js). Please submit issues and pull requests to that repository.
+
+## Installation and Usage
+
+See here: https://github.com/cloudinary/cloudinary_js/tree/master/pkg/cloudinary-core
+
+## Additional resources
 
 Additional resources are available at:
 
